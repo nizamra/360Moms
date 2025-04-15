@@ -16,12 +16,12 @@ module "staging" {
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
   db_engine          = var.db_engine
-  db_instance_class  = var.db_instance_class
-  db_storage         = var.db_storage
-  db_username        = var.db_username
-  db_password        = var.db_password
   db_parameter_group = var.db_parameter_group
-  redis_node_type    = var.redis_node_type
+  db_instance_class  = var.stag_db_instance_class
+  db_storage         = var.stag_db_storage
+  db_username        = var.stag_db_username
+  db_password        = var.stag_db_password
+  redis_node_type    = var.stag_redis_node_type
 }
 
 # Production Environment
@@ -38,10 +38,10 @@ module "production" {
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
   db_engine          = var.db_engine
-  db_instance_class  = var.db_instance_class
-  db_storage         = var.db_storage
-  db_username        = var.db_username
-  db_password        = var.db_password
   db_parameter_group = var.db_parameter_group
-  redis_node_type    = var.redis_node_type
+  db_instance_class  = var.prod_db_instance_class
+  db_storage         = var.prod_db_storage
+  db_username        = var.prod_db_username
+  db_password        = var.prod_db_password
+  redis_node_type    = var.prod_redis_node_type
 }

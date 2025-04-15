@@ -1,3 +1,4 @@
+#----------------------GENERAL----------------------#
 variable "aws_region" {
   description = "The AWS region to deploy the resources in"
   type        = string
@@ -28,6 +29,7 @@ variable "creator_name" {
   type        = string
 }
 
+#----------------------STAGING----------------------#
 variable "stag_instance_type" {
   description = "EC2 instance type for the application server."
   type        = string
@@ -39,6 +41,36 @@ variable "stag_ami_id" {
   type        = string
 }
 
+variable "stag_db_instance_class" {
+  description = "RDS instance class."
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "stag_db_storage" {
+  description = "Allocated storage for RDS (in GB)."
+  type        = number
+  default     = 20
+}
+
+variable "stag_db_username" {
+  description = "Username for the RDS instance."
+  type        = string
+}
+
+variable "stag_db_password" {
+  description = "Password for the RDS instance."
+  type        = string
+  sensitive   = true
+}
+
+variable "stag_redis_node_type" {
+  description = "ElastiCache Redis node type."
+  type        = string
+  default     = "cache.t3.micro"
+}
+
+#----------------------PRODUCTION----------------------#
 variable "prod_instance_type" {
   description = "EC2 instance type for the application server."
   type        = string
@@ -50,6 +82,36 @@ variable "prod_ami_id" {
   type        = string
 }
 
+variable "prod_db_instance_class" {
+  description = "RDS instance class."
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "prod_db_storage" {
+  description = "Allocated storage for RDS (in GB)."
+  type        = number
+  default     = 20
+}
+
+variable "prod_db_username" {
+  description = "Username for the RDS instance."
+  type        = string
+}
+
+variable "prod_db_password" {
+  description = "Password for the RDS instance."
+  type        = string
+  sensitive   = true
+}
+
+variable "prod_redis_node_type" {
+  description = "ElastiCache Redis node type."
+  type        = string
+  default     = "cache.t3.micro"
+}
+
+#----------------------NETWORK----------------------#
 variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
@@ -71,43 +133,15 @@ variable "availability_zones" {
   type        = list(string)
 }
 
+#----------------------DATABASE----------------------#
 variable "db_engine" {
   description = "Database engine for the RDS instance (e.g., mysql, postgres)."
   type        = string
   default     = "mysql"
 }
 
-variable "db_instance_class" {
-  description = "RDS instance class."
-  type        = string
-  default     = "db.t3.micro"
-}
-
-variable "db_storage" {
-  description = "Allocated storage for RDS (in GB)."
-  type        = number
-  default     = 20
-}
-
-variable "db_username" {
-  description = "Username for the RDS instance."
-  type        = string
-}
-
-variable "db_password" {
-  description = "Password for the RDS instance."
-  type        = string
-  sensitive   = true
-}
-
 variable "db_parameter_group" {
   description = "Parameter group for the RDS instance."
   type        = string
   default     = "default.mysql8.0"
-}
-
-variable "redis_node_type" {
-  description = "ElastiCache Redis node type."
-  type        = string
-  default     = "cache.t3.micro"
 }
