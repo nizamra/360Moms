@@ -7,12 +7,12 @@ terraform {
     }
   }
 
-  backend "remote_bucket" {
-    bucket         = "backend-bucket-name"
-    key            = "terraform-state/ThreeSixtyMom.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "dynamo-lock-table"
-    encrypt        = true
+  backend "s3" {
+    bucket       = "backend-bucket-name"
+    key          = "terraform-state/ThreeSixtyMom.tfstate"
+    region       = "us-east-1"
+    use_lockfile = true
+    encrypt      = true
   }
 }
 
