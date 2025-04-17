@@ -1,4 +1,3 @@
-
 # VPC
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
@@ -6,20 +5,19 @@ resource "aws_vpc" "this" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${var.environment}-vpc"
+    Name = "vpc"
   }
 }
 
 # Public Subnets
 resource "aws_subnet" "public" {
-  count                   = length(var.public_subnets)
-  vpc_id                  = aws_vpc.this.id
-  cidr_block              = var.public_subnets[count.index]
-  availability_zone       = var.availability_zones[count.index]
-  map_public_ip_on_launch = true
+  count             = length(var.public_subnets)
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = var.public_subnets[count.index]
+  availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name = "${var.environment}-public-${count.index}"
+    Name = "public-${count.index}"
   }
 }
 
@@ -31,7 +29,7 @@ resource "aws_subnet" "private" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name = "${var.environment}-private-${count.index}"
+    Name = "private-${count.index}"
   }
 }
 
@@ -40,16 +38,16 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.environment}-igw"
+    Name = "igw"
   }
 }
 
 # Elastic IP for NAT
 resource "aws_eip" "nat" {
-  domain = "vpc"
-
+  domain   = "vpc"
+  
   tags = {
-    Name = "${var.environment}-nat-eip"
+    Name = "nat-eip"
   }
 }
 
@@ -59,13 +57,13 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = aws_subnet.public[0].id
 
   tags = {
-    Name = "${var.environment}-nat"
+    Name = "nat"
   }
 }
 
 # Security Group for EC2
 resource "aws_security_group" "ec2" {
-  name        = "${var.environment}-ec2-sg"
+  name        = "ec2-sg"
   description = "Allow SSH, HTTP, and HTTPS"
   vpc_id      = aws_vpc.this.id
 
@@ -101,6 +99,6 @@ resource "aws_security_group" "ec2" {
   }
 
   tags = {
-    Name = "${var.environment}-ec2-sg"
+    Name = "ec2-sg"
   }
 }
