@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "environment" {
-  description = "Deployment environment name (STAGING, PRODUCTION)"
+  description = "Deployment environment name (staging, production)"
   type        = string
 }
 
@@ -85,4 +85,14 @@ variable "redis_node_type" {
   description = "ElastiCache Redis node type."
   type        = string
   default     = "cache.t3.micro"
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs"
+  type        = list(string)
+}
+
+variable "security_group_id" {
+  description = "The ID of the EC2 security group"
+  type        = string
 }

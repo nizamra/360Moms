@@ -13,7 +13,7 @@ variable "vpc_id" {
   type        = string
 }
 
-#----------------------STAGING----------------------#
+#----------------------staging----------------------#
 variable "stag_ec2_instance_id" {
   description = "EC2 instance type for the application server."
   type        = string
@@ -29,7 +29,7 @@ variable "stag_redis_cluster_id" {
   type        = string
 }
 
-#----------------------PRODUCTION----------------------#
+#----------------------production----------------------#
 variable "prod_ec2_instance_id" {
   description = "EC2 instance type for the application server."
   type        = string

@@ -4,8 +4,8 @@ resource "aws_cloudwatch_log_group" "application" {
   retention_in_days = 30
 
   tags = {
-    Name        = "application-logs"
-    VpcId       = var.vpc_id
+    Name  = "application-logs"
+    VpcId = var.vpc_id
   }
 }
 
@@ -15,8 +15,8 @@ resource "aws_cloudwatch_log_group" "nginx" {
   retention_in_days = 30
 
   tags = {
-    Name        = "nginx-logs"
-    VpcId       = var.vpc_id
+    Name  = "nginx-logs"
+    VpcId = var.vpc_id
   }
 }
 
@@ -26,8 +26,8 @@ resource "aws_cloudwatch_log_group" "system" {
   retention_in_days = 30
 
   tags = {
-    Name        = "system-logs"
-    VpcId       = var.vpc_id
+    Name  = "system-logs"
+    VpcId = var.vpc_id
   }
 }
 
@@ -37,8 +37,8 @@ resource "aws_cloudwatch_log_group" "rds" {
   retention_in_days = 30
 
   tags = {
-    Name        = "rds-logs"
-    VpcId       = var.vpc_id
+    Name  = "rds-logs"
+    VpcId = var.vpc_id
   }
 }
 
@@ -48,25 +48,9 @@ resource "aws_cloudwatch_log_group" "redis" {
   retention_in_days = 30
 
   tags = {
-    Name        = "redis-logs"
-    VpcId       = var.vpc_id
+    Name  = "redis-logs"
+    VpcId = var.vpc_id
   }
-}
-
-# CloudWatch Log Subscription Filter for Application Logs
-resource "aws_cloudwatch_log_subscription_filter" "application" {
-  name            = "application-log-filter"
-  log_group_name  = aws_cloudwatch_log_group.application.name
-  filter_pattern  = "ERROR"
-  destination_arn = aws_sns_topic.alerts.arn
-}
-
-# CloudWatch Log Subscription Filter for Nginx Error Logs
-resource "aws_cloudwatch_log_subscription_filter" "nginx_error" {
-  name            = "nginx-error-log-filter"
-  log_group_name  = aws_cloudwatch_log_group.nginx.name
-  filter_pattern  = "ERROR"
-  destination_arn = aws_sns_topic.alerts.arn
 }
 
 # CloudWatch Log Metrics Filter for Application Errors

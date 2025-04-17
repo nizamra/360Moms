@@ -1,22 +1,22 @@
 #----------------------GENERAL----------------------#
 aws_region   = "us-east-1"
-environment  = "STAGING"
+environment  = "staging"
 project_name = "test-project"
 github_repo  = "https://github.com/"
 creator_name = "360MomsIT"
 
-#----------------------STAGING----------------------#
+#----------------------staging----------------------#
 stag_instance_type     = "t2.micro"
 stag_ami_id            = "ami-0c2b8ca1dad447f8a"
-stag_db_instance_class = "db.t2.micro"
+stag_db_instance_class = "db.t3.micro"
 stag_db_storage        = 5
 stag_db_username       = "user"
 stag_redis_node_type   = "cache.t2.micro"
 
-#----------------------PRODUCTION----------------------#
+#----------------------production----------------------#
 prod_instance_type     = "t2.micro"
 prod_ami_id            = "ami-0c2b8ca1dad447f8a"
-prod_db_instance_class = "db.t2.micro"
+prod_db_instance_class = "db.t3.micro"
 prod_db_storage        = 20
 prod_db_username       = "admin"
 prod_redis_node_type   = "cache.t2.micro"

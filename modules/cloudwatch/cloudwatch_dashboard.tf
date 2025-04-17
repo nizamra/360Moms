@@ -23,8 +23,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "STAGING EC2 CPU" } ],
-          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.prod_ec2_instance_id}", { "label": "PRODUCTION EC2 CPU" } ]
+          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "staging EC2 CPU" } ],
+          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.prod_ec2_instance_id}", { "label": "production EC2 CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -40,8 +40,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "STAGING EC2 Memory" } ],
-          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.prod_ec2_instance_id}", { "label": "PRODUCTION EC2 Memory" } ]
+          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "staging EC2 Memory" } ],
+          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.prod_ec2_instance_id}", { "label": "production EC2 Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -57,8 +57,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", "path", "/", { "label": "STAGING EC2 Disk" } ],
-          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.prod_ec2_instance_id}", "path", "/", { "label": "PRODUCTION EC2 Disk" } ]
+          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", "path", "/", { "label": "staging EC2 Disk" } ],
+          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.prod_ec2_instance_id}", "path", "/", { "label": "production EC2 Disk" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -74,8 +74,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "STAGING RDS CPU" } ],
-          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.prod_rds_identifier}", { "label": "PRODUCTION RDS CPU" } ]
+          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "staging RDS CPU" } ],
+          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.prod_rds_identifier}", { "label": "production RDS CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -91,8 +91,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "STAGING RDS Memory" } ],
-          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.prod_rds_identifier}", { "label": "PRODUCTION RDS Memory" } ]
+          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "staging RDS Memory" } ],
+          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.prod_rds_identifier}", { "label": "production RDS Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -108,8 +108,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "STAGING Redis CPU" } ],
-          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.prod_redis_cluster_id}", { "label": "PRODUCTION Redis CPU" } ]
+          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "staging Redis CPU" } ],
+          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.prod_redis_cluster_id}", { "label": "production Redis CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -125,8 +125,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "STAGING Redis Memory" } ],
-          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.prod_redis_cluster_id}", { "label": "PRODUCTION Redis Memory" } ]
+          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "staging Redis Memory" } ],
+          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.prod_redis_cluster_id}", { "label": "production Redis Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -142,8 +142,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "STAGING-Metrics", "ApplicationErrorCount", { "label": "STAGING Errors" } ],
-          [ "PRODUCTION-Metrics", "ApplicationErrorCount", { "label": "PRODUCTION Errors" } ]
+          [ "staging-Metrics", "ApplicationErrorCount", { "label": "staging Errors" } ],
+          [ "production-Metrics", "ApplicationErrorCount", { "label": "production Errors" } ]
         ],
         "period": 300,
         "stat": "Sum",
@@ -156,9 +156,9 @@ resource "aws_cloudwatch_dashboard" "main" {
 EOF
 }
 
-# STAGING EC2 Dashboard
+# staging EC2 Dashboard
 resource "aws_cloudwatch_dashboard" "stag_ec2" {
-  dashboard_name = "STAGING-ec2-dashboard"
+  dashboard_name = "staging-ec2-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -170,7 +170,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# STAGING EC2 Dashboard"
+        "markdown": "# staging EC2 Dashboard"
       }
     },
     {
@@ -275,9 +275,9 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
 EOF
 }
 
-# PRODUCTION EC2 Dashboard
+# production EC2 Dashboard
 resource "aws_cloudwatch_dashboard" "prod_ec2" {
-  dashboard_name = "PRODUCTION-ec2-dashboard"
+  dashboard_name = "production-ec2-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -289,7 +289,7 @@ resource "aws_cloudwatch_dashboard" "prod_ec2" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# PRODUCTION EC2 Dashboard"
+        "markdown": "# production EC2 Dashboard"
       }
     },
     {
@@ -394,9 +394,9 @@ resource "aws_cloudwatch_dashboard" "prod_ec2" {
 EOF
 }
 
-# STAGING RDS Dashboard
+# staging RDS Dashboard
 resource "aws_cloudwatch_dashboard" "stag_rds" {
-  dashboard_name = "STAGING-rds-dashboard"
+  dashboard_name = "staging-rds-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -408,7 +408,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# STAGING RDS Dashboard"
+        "markdown": "# staging RDS Dashboard"
       }
     },
     {
@@ -512,9 +512,9 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
 EOF
 }
 
-# PRODUCTION RDS Dashboard
+# production RDS Dashboard
 resource "aws_cloudwatch_dashboard" "prod_rds" {
-  dashboard_name = "PRODUCTION-rds-dashboard"
+  dashboard_name = "production-rds-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -526,7 +526,7 @@ resource "aws_cloudwatch_dashboard" "prod_rds" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# PRODUCTION RDS Dashboard"
+        "markdown": "# production RDS Dashboard"
       }
     },
     {
@@ -630,9 +630,9 @@ resource "aws_cloudwatch_dashboard" "prod_rds" {
 EOF
 }
 
-# STAGING Redis Dashboard
+# staging Redis Dashboard
 resource "aws_cloudwatch_dashboard" "stag_redis" {
-  dashboard_name = "STAGING-redis-dashboard"
+  dashboard_name = "staging-redis-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -644,7 +644,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# STAGING Redis Dashboard"
+        "markdown": "# staging Redis Dashboard"
       }
     },
     {
@@ -748,9 +748,9 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
 EOF
 }
 
-# PRODUCTION Redis Dashboard
+# production Redis Dashboard
 resource "aws_cloudwatch_dashboard" "prod_redis" {
-  dashboard_name = "PRODUCTION-redis-dashboard"
+  dashboard_name = "production-redis-dashboard"
 
   dashboard_body = <<EOF
 {
@@ -762,7 +762,7 @@ resource "aws_cloudwatch_dashboard" "prod_redis" {
       "width": 24,
       "height": 1,
       "properties": {
-        "markdown": "# PRODUCTION Redis Dashboard"
+        "markdown": "# production Redis Dashboard"
       }
     },
     {

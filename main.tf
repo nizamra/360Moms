@@ -14,13 +14,15 @@ module "network" {
 # Staging Environment
 module "staging" {
   source             = "./modules/environment"
-  environment        = "STAGING"
+  environment        = "staging"
   aws_region         = var.aws_region
   prefix             = local.name_prefix
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
+  private_subnet_ids = module.network.private_subnet_ids
+  security_group_id  = module.network.security_group_id
 
   instance_type      = var.stag_instance_type
   ami_id             = var.stag_ami_id
@@ -36,13 +38,15 @@ module "staging" {
 # Production Environment
 module "production" {
   source             = "./modules/environment"
-  environment        = "PRODUCTION"
+  environment        = "production"
   aws_region         = var.aws_region
   prefix             = local.name_prefix
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
+  private_subnet_ids = module.network.private_subnet_ids
+  security_group_id  = module.network.security_group_id
 
   instance_type      = var.prod_instance_type
   ami_id             = var.prod_ami_id

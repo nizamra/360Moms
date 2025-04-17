@@ -6,11 +6,11 @@ variable "aws_region" {
 }
 
 variable "environment" {
-  description = "Deployment environment name (STAGING, PRODUCTION)"
+  description = "Deployment environment name (staging, production)"
   type        = string
   validation {
-    condition     = contains(["STAGING", "PRODUCTION"], var.environment)
-    error_message = "Invalid environment. Valid values: STAGING, PRODUCTION"
+    condition     = contains(["staging", "production"], var.environment)
+    error_message = "Invalid environment. Valid values: staging, production"
   }
 }
 
@@ -29,7 +29,7 @@ variable "creator_name" {
   type        = string
 }
 
-#----------------------STAGING----------------------#
+#----------------------staging----------------------#
 variable "stag_instance_type" {
   description = "EC2 instance type for the application server."
   type        = string
@@ -70,7 +70,7 @@ variable "stag_redis_node_type" {
   default     = "cache.t3.micro"
 }
 
-#----------------------PRODUCTION----------------------#
+#----------------------production----------------------#
 variable "prod_instance_type" {
   description = "EC2 instance type for the application server."
   type        = string

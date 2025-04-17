@@ -2,9 +2,8 @@
 resource "aws_instance" "app" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
-  subnet_id              = aws_subnet.private[0].id
-  vpc_security_group_ids = [aws_security_group.ec2.id]
-  key_name               = "${var.environment}-ec2-app"
+  subnet_id              = var.private_subnet_ids[0]
+  vpc_security_group_ids = [var.security_group_id]
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   user_data = <<-EOF
@@ -134,4 +133,5 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy" {
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.environment}-ec2-profile"
   role = aws_iam_role.ec2_role.name
+  tags = {}
 }
