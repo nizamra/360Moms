@@ -5,6 +5,14 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose environment to deploy'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
 
 jobs:
   terraform:
