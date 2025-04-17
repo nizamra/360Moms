@@ -15,7 +15,39 @@ on:
           - production
 
 jobs:
-  deploy:
+  terraform:
+    name: 'Terraform Apply'
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "Deploying to ${{ github.event.inputs.environment }}"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.11.2
+
+      - name: Configure AWS credentials (DevOps role)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+          role-session-name: GitHubActions-${{ github.run_id }}
+          role-duration-seconds: 3600
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_stag_db_password: ${{ secrets.STAG_DB_PASSWORD }}
+          TF_VAR_prod_db_password: ${{ secrets.PROD_DB_PASSWORD }}
