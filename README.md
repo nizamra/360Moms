@@ -45,23 +45,32 @@ The infrastructure includes the following components for both staging and produc
    cd 360Moms
    ```
 
-2. Initialize Terraform:
+2. Create a `terraform.tfvars` file for sensitive variables:
+   ```bash
+   # Create file with database passwords
+   cat > terraform.tfvars << EOF
+   stag_db_password = "your-secure-staging-password"
+   prod_db_password = "your-secure-production-password"
+   EOF
+   ```
+
+3. Initialize Terraform:
    ```bash
    terraform init
    ```
 
-3. Review the variables in `values.auto.tfvars` and update as needed:
+4. Review the variables in `values.auto.tfvars` and update as needed:
    - Environment-specific configurations
    - Instance types
    - Database settings
    - Redis configurations
 
-4. Plan the deployment:
+5. Plan the deployment:
    ```bash
    terraform plan
    ```
 
-5. Apply the configuration:
+6. Apply the configuration:
    ```bash
    terraform apply
    ```

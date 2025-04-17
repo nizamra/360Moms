@@ -7,10 +7,6 @@ variable "aws_region" {
 variable "environment" {
   description = "Deployment environment name (STAGING, PRODUCTION)"
   type        = string
-  validation {
-    condition     = contains(["STAGING", "PRODUCTION"], var.environment)
-    error_message = "Invalid environment. Valid values: STAGING, PRODUCTION"
-  }
 }
 
 variable "prefix" {

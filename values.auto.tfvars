@@ -14,12 +14,12 @@ stag_db_username       = "user"
 stag_redis_node_type   = "cache.t2.micro"
 
 #----------------------PRODUCTION----------------------#
-prod_instance_type     = "c7g.xlarge"
-prod_ami_id            = "ami-06ffba82f092f48d7"
-prod_db_instance_class = "db.r7g.xlarge"
+prod_instance_type     = "t2.micro"
+prod_ami_id            = "ami-0c2b8ca1dad447f8a"
+prod_db_instance_class = "db.t2.micro"
 prod_db_storage        = 20
 prod_db_username       = "admin"
-prod_redis_node_type   = "cache.r7g.xlarge"
+prod_redis_node_type   = "cache.t2.micro"
 
 #----------------------NETWORK----------------------#
 vpc_cidr           = "10.0.0.0/16"
