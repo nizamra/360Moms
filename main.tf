@@ -56,9 +56,9 @@ module "production" {
 }
 
 module "cloudwatch" {
-  source      = "./modules/cloudwatch"
-  aws_region  = var.aws_region
-  vpc_id      = module.network.vpc_id
+  source     = "./modules/cloudwatch"
+  aws_region = var.aws_region
+  vpc_id     = module.network.vpc_id
 
   # Resource IDs for monitoring
   stag_ec2_instance_id  = module.staging.ec2_instance_id

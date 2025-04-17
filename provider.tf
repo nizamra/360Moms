@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "threesixtymom-terraform-state"
+    bucket       = "threesixtymom-state"
     key          = "tfstate/ThreeSixtyMom.tfstate"
     region       = "us-east-1"
     use_lockfile = true
