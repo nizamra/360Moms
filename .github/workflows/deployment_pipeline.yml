@@ -13,6 +13,9 @@ on:
         options:
           - staging
           - production
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   terraform:
