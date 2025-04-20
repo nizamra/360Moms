@@ -4,7 +4,6 @@ locals {
 
 module "network" {
   source             = "./modules/network"
-  aws_region         = var.aws_region
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
@@ -15,7 +14,6 @@ module "network" {
 module "staging" {
   source             = "./modules/environment"
   environment        = "staging"
-  aws_region         = var.aws_region
   prefix             = local.name_prefix
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
@@ -39,7 +37,6 @@ module "staging" {
 module "production" {
   source             = "./modules/environment"
   environment        = "production"
-  aws_region         = var.aws_region
   prefix             = local.name_prefix
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
