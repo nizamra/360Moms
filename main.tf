@@ -28,6 +28,8 @@ module "staging" {
   db_parameter_group = var.db_parameter_group
   db_instance_class  = var.stag_db_instance_class
   db_storage         = var.stag_db_storage
+  db_storage_type    = var.stag_db_storage_type
+  max_db_storage     = var.stag_max_db_storage
   db_username        = var.stag_db_username
   db_password        = var.stag_db_password
   redis_node_type    = var.stag_redis_node_type
@@ -51,6 +53,8 @@ module "production" {
   db_parameter_group = var.db_parameter_group
   db_instance_class  = var.prod_db_instance_class
   db_storage         = var.prod_db_storage
+  db_storage_type    = var.prod_db_storage_type
+  max_db_storage     = var.prod_max_db_storage
   db_username        = var.prod_db_username
   db_password        = var.prod_db_password
   redis_node_type    = var.prod_redis_node_type

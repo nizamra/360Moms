@@ -75,6 +75,16 @@ variable "db_parameter_group" {
   default     = "default.mysql8.0"
 }
 
+variable "db_storage_type" {
+  description = "the type of storage for the RDS instance."
+  type        = string
+}
+
+variable "max_db_storage" {
+  description = "the maximum allocated storage for the RDS instance."
+  type        = number
+}
+
 variable "redis_node_type" {
   description = "ElastiCache Redis node type."
   type        = string

@@ -1,17 +1,17 @@
 # ElastiCache Subnet Group
 resource "aws_elasticache_subnet_group" "this" {
-  name       = "${var.environment}-redis-subnet-group"
+  name       = "${var.prefix}-redis-subnet-group"
   subnet_ids = var.private_subnet_ids
 
   tags = {
-    Name = "${var.environment}-redis-subnet-group"
+    Name = "${var.prefix}-redis-subnet-group"
   }
 }
 
 # ElastiCache Redis Cluster
 resource "aws_elasticache_replication_group" "redis" {
-  description          = "${var.environment} Redis replication group"
-  replication_group_id = "${var.environment}-redis"
+  description          = "${var.prefix} Redis replication group"
+  replication_group_id = "${var.prefix}-redis"
   engine               = "redis"
   node_type            = var.redis_node_type
   num_cache_clusters   = 1
@@ -22,6 +22,6 @@ resource "aws_elasticache_replication_group" "redis" {
   port                        = 6379
 
   tags = {
-    Name = "${var.environment}-redis"
+    Name = "${var.prefix}-redis"
   }
 }

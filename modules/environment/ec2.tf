@@ -27,22 +27,22 @@ resource "aws_instance" "app" {
             "collect_list": [
               {
                 "file_path": "/var/log/nginx/error.log",
-                "log_group_name": "/aws/ec2/${var.prefix}-${var.environment}-nginx",
+                "log_group_name": "/aws/ec2/${var.prefix}-nginx",
                 "log_stream_name": "{instance_id}-nginx-error"
               },
               {
                 "file_path": "/var/log/nginx/access.log",
-                "log_group_name": "/aws/ec2/${var.prefix}-${var.environment}-nginx",
+                "log_group_name": "/aws/ec2/${var.prefix}-nginx",
                 "log_stream_name": "{instance_id}-nginx-access"
               },
               {
                 "file_path": "/var/log/syslog",
-                "log_group_name": "/aws/ec2/${var.prefix}-${var.environment}-system",
+                "log_group_name": "/aws/ec2/${var.prefix}-system",
                 "log_stream_name": "{instance_id}-syslog"
               },
               {
                 "file_path": "/var/log/application.log",
-                "log_group_name": "/aws/ec2/${var.prefix}-${var.environment}-application",
+                "log_group_name": "/aws/ec2/${var.prefix}-application",
                 "log_stream_name": "{instance_id}-application"
               }
             ]
@@ -101,13 +101,13 @@ resource "aws_instance" "app" {
   EOF
 
   tags = {
-    Name = "${var.environment}-ec2-app"
+    Name = "${var.prefix}-ec2-app"
   }
 }
 
 # IAM Role for EC2 CloudWatch access
 resource "aws_iam_role" "ec2_role" {
-  name = "${var.environment}-ec2-role"
+  name = "${var.prefix}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -131,7 +131,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy" {
 
 # Create an instance profile for the EC2 instance
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${var.environment}-ec2-profile"
+  name = "${var.prefix}-ec2-profile"
   role = aws_iam_role.ec2_role.name
   tags = {}
 }
