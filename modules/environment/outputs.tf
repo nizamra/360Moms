@@ -8,7 +8,7 @@ output "ec2_instance_id" {
 }
 
 output "rds_identifier" {
-  value       = aws_db_instance.this.id
+  value       = aws_db_instance.db_instance.id
   description = "The identifier of the RDS instance"
 }
 
