@@ -18,3 +18,8 @@ variable "availability_zones" {
   description = "List of AZs to use for the subnets."
   type        = list(string)
 }
+
+variable "prefix" {
+  description = "prefix named after the environment."
+  type        = string
+}

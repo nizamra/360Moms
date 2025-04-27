@@ -4,22 +4,27 @@ locals {
 
 module "network" {
   source             = "./modules/network"
+  prefix             = local.name_prefix
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
   vpc_cidr           = var.vpc_cidr
 }
 
+module "roles" {
+  source = "./modules/roles"
+  prefix = local.name_prefix
+}
+
 # Staging Environment
 module "staging" {
   source             = "./modules/environment"
   environment        = "staging"
-  prefix             = local.name_prefix
+  prefix             = "staging"
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
-  private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
 
   instance_type      = var.stag_instance_type
@@ -33,18 +38,19 @@ module "staging" {
   db_username        = var.stag_db_username
   db_password        = var.stag_db_password
   redis_node_type    = var.stag_redis_node_type
+  ec2_role_name      = module.roles.ec2_role_name
+  private_subnet_ids = module.network.private_subnet_ids
 }
 
 # Production Environment
 module "production" {
   source             = "./modules/environment"
   environment        = "production"
-  prefix             = local.name_prefix
+  prefix             = "production"
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
-  private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
 
   instance_type      = var.prod_instance_type
@@ -58,6 +64,8 @@ module "production" {
   db_username        = var.prod_db_username
   db_password        = var.prod_db_password
   redis_node_type    = var.prod_redis_node_type
+  ec2_role_name      = module.roles.ec2_role_name
+  private_subnet_ids = module.network.private_subnet_ids
 }
 
 module "cloudwatch" {

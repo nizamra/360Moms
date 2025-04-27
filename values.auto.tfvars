@@ -6,18 +6,18 @@ github_repo  = "https://github.com/"
 creator_name = "360MomsIT"
 
 #----------------------staging----------------------#
-stag_instance_type     = "t2.micro"
-stag_ami_id            = "ami-0505142bef60df42a"
+stag_instance_type     = "t3.micro"
+stag_ami_id            = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
 stag_db_instance_class = "db.t3.micro"
-stag_db_storage        = 10
-stag_db_storage_type   = "gp2"
+stag_db_storage        = 20
+stag_db_storage_type   = "gp3"
 stag_max_db_storage    = 60
 stag_db_username       = "user"
 stag_redis_node_type   = "cache.t2.micro"
 
 #----------------------production----------------------#
-prod_instance_type     = "t2.micro"
-prod_ami_id            = "ami-0505142bef60df42a"
+prod_instance_type     = "t3.micro"
+prod_ami_id            = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
 prod_db_instance_class = "db.t3.micro"
 prod_db_storage        = 50
 prod_db_storage_type   = "io1"

@@ -15,7 +15,7 @@ resource "aws_db_instance" "db_instance" {
   engine_version         = "8.0.35"
   instance_class         = var.db_instance_class
   allocated_storage      = var.db_storage
-  storage_type           = var.db_storage_type
+  storage_type           = "gp3"
   max_allocated_storage  = var.max_db_storage
   username               = var.db_username
   password               = var.db_password

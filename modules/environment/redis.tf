@@ -1,5 +1,5 @@
 # ElastiCache Subnet Group
-resource "aws_elasticache_subnet_group" "this" {
+resource "aws_elasticache_subnet_group" "cache_subnet_group" {
   name       = "${var.prefix}-redis-subnet-group"
   subnet_ids = var.private_subnet_ids
 
@@ -17,7 +17,7 @@ resource "aws_elasticache_replication_group" "redis" {
   node_type                  = "cache.t3.micro"
   num_cache_clusters         = 1
   automatic_failover_enabled = false
-  subnet_group_name          = aws_elasticache_subnet_group.this.name
+  subnet_group_name          = aws_elasticache_subnet_group.cache_subnet_group.name
   security_group_ids         = [var.security_group_id]
   # Use only one AZ since we have one cluster
   preferred_cache_cluster_azs = [var.availability_zones[0]]
