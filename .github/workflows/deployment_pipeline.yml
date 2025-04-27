@@ -6,13 +6,6 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Choose environment to deploy'
-        required: true
-        type: choice
-        options:
-          - staging
-          - production
       destroy:
         description: 'Set true to destroy the environment'
         required: false

@@ -7,7 +7,7 @@ creator_name = "360MomsIT"
 
 #----------------------staging----------------------#
 stag_instance_type     = "t2.micro"
-stag_ami_id            = "ami-06d42ff576ea00d28"
+stag_ami_id            = "ami-0505142bef60df42a"
 stag_db_instance_class = "db.t3.micro"
 stag_db_storage        = 10
 stag_db_storage_type   = "gp2"
@@ -17,7 +17,7 @@ stag_redis_node_type   = "cache.t2.micro"
 
 #----------------------production----------------------#
 prod_instance_type     = "t2.micro"
-prod_ami_id            = "ami-06d42ff576ea00d28"
+prod_ami_id            = "ami-0505142bef60df42a"
 prod_db_instance_class = "db.t3.micro"
 prod_db_storage        = 50
 prod_db_storage_type   = "io1"
