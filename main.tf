@@ -4,24 +4,27 @@ locals {
 
 module "network" {
   source             = "./modules/network"
-  aws_region         = var.aws_region
+  prefix             = local.name_prefix
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
   vpc_cidr           = var.vpc_cidr
 }
 
+module "roles" {
+  source = "./modules/roles"
+  prefix = local.name_prefix
+}
+
 # Staging Environment
 module "staging" {
   source             = "./modules/environment"
   environment        = "staging"
-  aws_region         = var.aws_region
-  prefix             = local.name_prefix
+  prefix             = "staging"
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
-  private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
 
   instance_type      = var.stag_instance_type
@@ -30,22 +33,24 @@ module "staging" {
   db_parameter_group = var.db_parameter_group
   db_instance_class  = var.stag_db_instance_class
   db_storage         = var.stag_db_storage
+  db_storage_type    = var.stag_db_storage_type
+  max_db_storage     = var.stag_max_db_storage
   db_username        = var.stag_db_username
   db_password        = var.stag_db_password
   redis_node_type    = var.stag_redis_node_type
+  ec2_role_name      = module.roles.ec2_role_name
+  private_subnet_ids = module.network.private_subnet_ids
 }
 
 # Production Environment
 module "production" {
   source             = "./modules/environment"
   environment        = "production"
-  aws_region         = var.aws_region
-  prefix             = local.name_prefix
+  prefix             = "production"
   availability_zones = var.availability_zones
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   vpc_cidr           = var.vpc_cidr
-  private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
 
   instance_type      = var.prod_instance_type
@@ -54,9 +59,13 @@ module "production" {
   db_parameter_group = var.db_parameter_group
   db_instance_class  = var.prod_db_instance_class
   db_storage         = var.prod_db_storage
+  db_storage_type    = var.prod_db_storage_type
+  max_db_storage     = var.prod_max_db_storage
   db_username        = var.prod_db_username
   db_password        = var.prod_db_password
   redis_node_type    = var.prod_redis_node_type
+  ec2_role_name      = module.roles.ec2_role_name
+  private_subnet_ids = module.network.private_subnet_ids
 }
 
 module "cloudwatch" {

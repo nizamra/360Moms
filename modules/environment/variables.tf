@@ -1,9 +1,3 @@
-variable "aws_region" {
-  description = "The AWS region to deploy the resources in"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "environment" {
   description = "Deployment environment name (staging, production)"
   type        = string
@@ -81,6 +75,16 @@ variable "db_parameter_group" {
   default     = "default.mysql8.0"
 }
 
+variable "db_storage_type" {
+  description = "the type of storage for the RDS instance."
+  type        = string
+}
+
+variable "max_db_storage" {
+  description = "the maximum allocated storage for the RDS instance."
+  type        = number
+}
+
 variable "redis_node_type" {
   description = "ElastiCache Redis node type."
   type        = string
@@ -94,5 +98,10 @@ variable "private_subnet_ids" {
 
 variable "security_group_id" {
   description = "The ID of the EC2 security group"
+  type        = string
+}
+
+variable "ec2_role_name" {
+  description = "The name of the EC2 role"
   type        = string
 }

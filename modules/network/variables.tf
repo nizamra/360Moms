@@ -1,9 +1,3 @@
-variable "aws_region" {
-  description = "The AWS region to deploy the resources in"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
@@ -20,7 +14,12 @@ variable "private_subnets" {
   type        = list(string)
 }
 
-variable   "availability_zones" {
+variable "availability_zones" {
   description = "List of AZs to use for the subnets."
   type        = list(string)
+}
+
+variable "prefix" {
+  description = "prefix named after the environment."
+  type        = string
 }

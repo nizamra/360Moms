@@ -2,7 +2,7 @@
 variable "aws_region" {
   description = "The AWS region to deploy the resources in"
   type        = string
-  default     = "us-east-1"
+  default     = "me-south-1"
 }
 
 variable "environment" {
@@ -33,7 +33,6 @@ variable "creator_name" {
 variable "stag_instance_type" {
   description = "EC2 instance type for the application server."
   type        = string
-  default     = "t2.micro"
 }
 
 variable "stag_ami_id" {
@@ -44,18 +43,26 @@ variable "stag_ami_id" {
 variable "stag_db_instance_class" {
   description = "RDS instance class."
   type        = string
-  default     = "db.t3.micro"
 }
 
 variable "stag_db_storage" {
   description = "Allocated storage for RDS (in GB)."
   type        = number
-  default     = 20
+}
+
+variable "stag_db_storage_type" {
+  description = "the type of storage for the RDS instance."
+  type        = string
 }
 
 variable "stag_db_username" {
   description = "Username for the RDS instance."
   type        = string
+}
+
+variable "stag_max_db_storage" {
+  description = "the maximum allocated storage for the RDS instance."
+  type        = number
 }
 
 variable "stag_db_password" {
@@ -92,6 +99,16 @@ variable "prod_db_storage" {
   description = "Allocated storage for RDS (in GB)."
   type        = number
   default     = 20
+}
+
+variable "prod_db_storage_type" {
+  description = "the type of storage for the RDS instance."
+  type        = string
+}
+
+variable "prod_max_db_storage" {
+  description = "the maximum allocated storage for the RDS instance."
+  type        = number
 }
 
 variable "prod_db_username" {
