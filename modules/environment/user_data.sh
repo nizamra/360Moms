@@ -89,3 +89,42 @@ systemctl enable nginx
 # Create a sample application log file
 touch /var/log/application.log
 chmod 644 /var/log/application.log 
+
+cat > /etc/environment <<EOF
+RDS_ENDPOINT=${rds_endpoint}
+REDIS_ENDPOINT=${redis_endpoint}
+EOF
+
+# Install MySQL client and Redis tools
+apt-get install -y mysql-client redis-tools
+
+# Create connectivity test script
+cat > /usr/local/bin/test_connectivity.sh <<'EOF'
+#!/bin/bash
+
+echo "=== EC2 Connectivity Test $(date) ===" >> /var/log/application.log
+
+# Test MySQL connectivity
+echo "Testing MySQL connectivity to ${rds_endpoint}..." >> /var/log/application.log
+if mysqladmin ping -h ${rds_endpoint} -u ${db_username} -p${db_password} &>/dev/null; then
+  echo "SUCCESS: MySQL connection established" >> /var/log/application.log
+else
+  echo "FAILED: Cannot connect to MySQL database" >> /var/log/application.log
+fi
+
+# Test Redis connectivity
+echo "Testing Redis connectivity to ${redis_endpoint}..." >> /var/log/application.log
+if redis-cli -h ${redis_endpoint} ping | grep -q 'PONG'; then
+  echo "SUCCESS: Redis connection established" >> /var/log/application.log
+else
+  echo "FAILED: Cannot connect to Redis" >> /var/log/application.log
+fi
+EOF
+
+chmod +x /usr/local/bin/test_connectivity.sh
+
+# Run the test on startup
+/usr/local/bin/test_connectivity.sh
+
+# Add a cron job to test connectivity every 5 minutes
+echo "*/5 * * * * root /usr/local/bin/test_connectivity.sh" > /etc/cron.d/connectivity_test

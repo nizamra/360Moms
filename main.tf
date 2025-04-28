@@ -40,6 +40,8 @@ module "staging" {
   redis_node_type    = var.stag_redis_node_type
   ec2_role_name      = module.roles.ec2_role_name
   private_subnet_ids = module.network.private_subnet_ids
+  rds_security_group_id = module.network.rds_security_group_id
+  redis_security_group_id = module.network.redis_security_group_id
 }
 
 # Production Environment
@@ -66,6 +68,8 @@ module "production" {
   redis_node_type    = var.prod_redis_node_type
   ec2_role_name      = module.roles.ec2_role_name
   private_subnet_ids = module.network.private_subnet_ids
+  rds_security_group_id = module.network.rds_security_group_id
+  redis_security_group_id = module.network.redis_security_group_id
 }
 
 module "cloudwatch" {

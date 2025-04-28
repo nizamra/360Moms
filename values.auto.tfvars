@@ -13,7 +13,7 @@ stag_db_storage        = 20
 stag_db_storage_type   = "gp3"
 stag_max_db_storage    = 60
 stag_db_username       = "user"
-stag_redis_node_type   = "cache.t2.micro"
+stag_redis_node_type   = "cache.t3.micro"
 
 #----------------------production----------------------#
 prod_instance_type     = "t3.micro"
@@ -23,7 +23,7 @@ prod_db_storage        = 50
 prod_db_storage_type   = "io1"
 prod_max_db_storage    = 200
 prod_db_username       = "admin"
-prod_redis_node_type   = "cache.t2.micro"
+prod_redis_node_type   = "cache.t3.micro"
 
 #----------------------NETWORK----------------------#
 vpc_cidr           = "10.0.0.0/16"

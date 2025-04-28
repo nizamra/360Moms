@@ -105,3 +105,13 @@ variable "ec2_role_name" {
   description = "The name of the EC2 role"
   type        = string
 }
+
+variable "rds_security_group_id" {
+  description = "The ID of the RDS security group"
+  type        = string
+}
+
+variable "redis_security_group_id" {
+  description = "The ID of the Redis security group"
+  type        = string
+}
