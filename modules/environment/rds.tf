@@ -25,6 +25,25 @@ resource "aws_db_subnet_group" "subnet_group" {
   }
 }
 
+resource "aws_db_parameter_group" "mysql" {
+  name   = "${var.prefix}-mysql80-params"
+  family = "mysql8.0"
+
+  parameter {
+    name  = "log_output"
+    value = "FILE"
+  }
+
+  parameter {
+    name  = "slow_query_log"
+    value = "1"
+  }
+
+  tags = {
+    Name = "${var.prefix}-mysql-params"
+  }
+}
+
 # RDS Database Instance
 resource "aws_db_instance" "db_instance" {
   identifier             = "${var.prefix}-rds"
@@ -39,7 +58,7 @@ resource "aws_db_instance" "db_instance" {
   skip_final_snapshot    = true
   vpc_security_group_ids = [var.rds_security_group_id]
   db_subnet_group_name   = aws_db_subnet_group.subnet_group.name
-  parameter_group_name   = var.db_parameter_group
+  parameter_group_name   = aws_db_parameter_group.mysql.name
   # TODO: Add KMS Key for RDS
   # storage_encrypted      = true
   # kms_key_id             = aws_kms_key.rds_key.arn

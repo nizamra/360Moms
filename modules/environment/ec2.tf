@@ -7,11 +7,11 @@ resource "aws_instance" "app" {
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   user_data = templatefile("${path.module}/user_data.sh", {
-    prefix = var.prefix
-    rds_endpoint = aws_db_instance.db_instance.address
+    prefix         = var.prefix
+    rds_endpoint   = aws_db_instance.db_instance.address
     redis_endpoint = aws_elasticache_replication_group.redis.primary_endpoint_address
-    db_username = var.db_username
-    db_password = var.db_password
+    db_username    = var.db_username
+    db_password    = var.db_password
   })
 
   tags = {

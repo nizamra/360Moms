@@ -44,6 +44,7 @@ resource "aws_internet_gateway" "igw" {
 
 # Elastic IP for NAT
 resource "aws_eip" "nat" {
+  count  = length(var.public_subnets)
   domain = "vpc"
 
   tags = {
@@ -56,7 +57,7 @@ resource "aws_nat_gateway" "nat" {
   count         = length(var.public_subnets)
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
-  
+
   tags = {
     Name = "nat"
   }
@@ -142,7 +143,7 @@ resource "aws_security_group" "ec2" {
 resource "aws_security_group" "rds" {
   name        = "${var.prefix}-rds-sg"
   description = "Allow inbound traffic to RDS from EC2"
-  vpc_id      = aws_vpc.this.id
+  vpc_id      = aws_vpc.private_cloud.id
 
   ingress {
     description     = "MySQL from EC2"
@@ -168,7 +169,7 @@ resource "aws_security_group" "rds" {
 resource "aws_security_group" "redis" {
   name        = "${var.prefix}-redis-sg"
   description = "Allow inbound traffic to Redis from EC2"
-  vpc_id      = aws_vpc.this.id
+  vpc_id      = aws_vpc.private_cloud.id
 
   ingress {
     description     = "Redis from EC2"

@@ -69,12 +69,6 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "db_parameter_group" {
-  description = "Parameter group for the RDS instance."
-  type        = string
-  default     = "default.mysql8.0"
-}
-
 variable "db_storage_type" {
   description = "the type of storage for the RDS instance."
   type        = string
