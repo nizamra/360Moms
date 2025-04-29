@@ -69,12 +69,6 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "db_parameter_group" {
-  description = "Parameter group for the RDS instance."
-  type        = string
-  default     = "default.mysql8.0"
-}
-
 variable "db_storage_type" {
   description = "the type of storage for the RDS instance."
   type        = string
@@ -103,5 +97,15 @@ variable "security_group_id" {
 
 variable "ec2_role_name" {
   description = "The name of the EC2 role"
+  type        = string
+}
+
+variable "rds_security_group_id" {
+  description = "The ID of the RDS security group"
+  type        = string
+}
+
+variable "redis_security_group_id" {
+  description = "The ID of the Redis security group"
   type        = string
 }
