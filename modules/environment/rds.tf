@@ -46,14 +46,15 @@ resource "aws_db_parameter_group" "mysql" {
 
 # RDS Database Instance
 resource "aws_db_instance" "db_instance" {
-  identifier             = "${var.prefix}-rds"
-  engine                 = var.db_engine
-  engine_version         = "8.0.35"
-  instance_class         = var.db_instance_class
-  allocated_storage      = var.db_storage
-  storage_type           = var.db_storage_type
-  max_allocated_storage  = var.max_db_storage
-  username               = var.db_username
+  identifier            = "${var.prefix}-rds"
+  engine                = var.db_engine
+  engine_version        = "8.0.35"
+  instance_class        = var.db_instance_class
+  allocated_storage     = var.db_storage
+  storage_type          = var.db_storage_type
+  max_allocated_storage = var.max_db_storage
+  username              = var.db_username
+  # password               = aws_secretsmanager_secret_version.db_password.secret_string
   password               = var.db_password
   skip_final_snapshot    = true
   vpc_security_group_ids = [var.rds_security_group_id]

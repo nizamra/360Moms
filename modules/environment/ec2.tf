@@ -1,25 +1,44 @@
-# EC2 Instance with Docker and Nginx
-resource "aws_instance" "app" {
-  ami                    = var.ami_id
+# Launch Template for EC2 instances
+resource "aws_launch_template" "app" {
+  name_prefix            = "${var.prefix}-template-"
+  image_id               = var.ami_id
   instance_type          = var.instance_type
-  subnet_id              = var.private_subnet_ids[0]
   vpc_security_group_ids = [var.security_group_id]
-  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
-  user_data = templatefile("${path.module}/user_data.sh", {
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_profile.name
+  }
+
+  user_data = base64encode(templatefile("${path.module}/user_data.sh", {
     prefix         = var.prefix
     rds_endpoint   = aws_db_instance.db_instance.address
     redis_endpoint = aws_elasticache_replication_group.redis.primary_endpoint_address
     db_username    = var.db_username
     db_password    = var.db_password
-  })
+  }))
+}
 
-  tags = {
-    Name = "${var.prefix}-ec2-app"
+# Auto Scaling Group to maintain two instances
+resource "aws_autoscaling_group" "app" {
+  name                = "${var.prefix}-asg"
+  desired_capacity    = 2
+  min_size            = 2
+  max_size            = 2
+  vpc_zone_identifier = var.private_subnet_ids
+
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = aws_launch_template.app.latest_version
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "${var.prefix}-ec2-app"
+    propagate_at_launch = true
   }
 }
 
-# Create an instance profile for the EC2 instance
+# IAM Instance Profile (unchanged from original)
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.prefix}-ec2-profile"
   role = var.ec2_role_name
