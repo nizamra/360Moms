@@ -70,19 +70,19 @@ module "production" {
   redis_security_group_id = module.network.redis_security_group_id
 }
 
-module "cloudwatch" {
-  source     = "./modules/cloudwatch"
-  aws_region = var.aws_region
-  vpc_id     = module.network.vpc_id
+# module "cloudwatch" {
+#   source     = "./modules/cloudwatch"
+#   aws_region = var.aws_region
+#   vpc_id     = module.network.vpc_id
 
-  # Resource IDs for monitoring
-  stag_ec2_instance_id  = module.staging.ec2_instance_id
-  stag_rds_identifier   = module.staging.rds_identifier
-  stag_redis_cluster_id = module.staging.redis_cluster_id
-  prod_ec2_instance_id  = module.production.ec2_instance_id
-  prod_rds_identifier   = module.production.rds_identifier
-  prod_redis_cluster_id = module.production.redis_cluster_id
-  alert_email           = "alerts@example.com" # TODO: Replace with actual email address
+#   # Resource IDs for monitoring
+#   stag_ec2_instance_id  = module.staging.ec2_instance_id
+#   stag_rds_identifier   = module.staging.rds_identifier
+#   stag_redis_cluster_id = module.staging.redis_cluster_id
+#   prod_ec2_instance_id  = module.production.ec2_instance_id
+#   prod_rds_identifier   = module.production.rds_identifier
+#   prod_redis_cluster_id = module.production.redis_cluster_id
+#   alert_email           = "alerts@example.com" # TODO: Replace with actual email address
 
-  depends_on = [module.network, module.staging, module.production]
-}
+#   depends_on = [module.network, module.staging, module.production]
+# }

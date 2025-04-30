@@ -1,12 +1,15 @@
-output "app_instance_public_ip" {
-  value = aws_instance.app.public_ip
+# outputs.tf (updated)
+output "launch_template_id" {
+  value       = aws_launch_template.app.id
+  description = "The ID of the Launch Template"
 }
 
-output "ec2_instance_id" {
-  value       = aws_instance.app.id
-  description = "The ID of the EC2 instance"
+output "autoscaling_group_name" {
+  value       = aws_autoscaling_group.app.name
+  description = "The name of the Auto Scaling Group"
 }
 
+# Keep existing RDS/Redis outputs (unchanged)
 output "rds_identifier" {
   value       = aws_db_instance.db_instance.id
   description = "The identifier of the RDS instance"
