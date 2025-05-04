@@ -12,8 +12,8 @@ on:
           - 'false'
           - 'true'
 
-# permissions:
-#   id-token: write
+permissions:
+  id-token: read
 #   contents: read
 
 jobs:
