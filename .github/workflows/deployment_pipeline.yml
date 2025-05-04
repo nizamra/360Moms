@@ -12,9 +12,9 @@ on:
           - 'false'
           - 'true'
 
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 
 jobs:
   terraform:
