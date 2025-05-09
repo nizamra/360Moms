@@ -37,10 +37,3 @@ resource "aws_autoscaling_group" "app" {
     propagate_at_launch = true
   }
 }
-
-# IAM Instance Profile
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${var.prefix}-ec2-profile"
-  role = var.ec2_role_name
-  tags = {}
-}

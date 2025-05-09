@@ -11,18 +11,12 @@ module "network" {
   vpc_cidr           = var.vpc_cidr
 }
 
-module "roles" {
-  source = "./modules/roles"
-  prefix = local.name_prefix
-}
-
 module "ec2" {
   source             = "./modules/ec2"
   prefix             = "staging"
   ami_id             = var.stag_ami_id
   instance_type      = var.stag_instance_type
   private_subnet_ids = module.network.private_subnet_ids
-  ec2_role_name      = module.roles.ec2_role_name
   security_group_id  = module.network.security_group_id
   rds_endpoint       = module.rds.rds_endpoint
   redis_endpoint     = module.redis.redis_endpoint

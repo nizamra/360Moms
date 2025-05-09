@@ -23,11 +23,6 @@ variable "security_group_id" {
   type        = string
 }
 
-variable "ec2_role_name" {
-  description = "IAM role name for EC2 instance"
-  type        = string
-}
-
 variable "rds_endpoint" {
   description = "RDS instance endpoint"
   type        = string
