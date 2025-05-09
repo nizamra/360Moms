@@ -11,8 +11,8 @@ resource "aws_launch_template" "app" {
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
     prefix         = var.prefix
-    rds_endpoint   = aws_db_instance.db_instance.address
-    redis_endpoint = aws_elasticache_replication_group.redis.primary_endpoint_address
+    rds_endpoint   = var.rds_endpoint
+    redis_endpoint = var.redis_endpoint
     db_username    = var.db_username
     db_password    = var.db_password
   }))
@@ -38,7 +38,7 @@ resource "aws_autoscaling_group" "app" {
   }
 }
 
-# IAM Instance Profile (unchanged from original)
+# IAM Instance Profile
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.prefix}-ec2-profile"
   role = var.ec2_role_name

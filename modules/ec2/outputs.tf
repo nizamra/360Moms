@@ -19,3 +19,8 @@ output "redis_cluster_id" {
   value       = aws_elasticache_replication_group.redis.id
   description = "The ID of the Redis cluster"
 }
+
+output "ec2_role_name" {
+  value       = aws_iam_role.ec2_role.name
+  description = "The name of the EC2 role"
+}

@@ -14,7 +14,6 @@ resource "aws_cloudwatch_metric_alarm" "ec2_cpu" {
 
   dimensions = {
     InstanceId = var.stag_ec2_instance_id
-    InstanceId = var.prod_ec2_instance_id
   }
 }
 
@@ -33,7 +32,6 @@ resource "aws_cloudwatch_metric_alarm" "ec2_status" {
 
   dimensions = {
     InstanceId = var.stag_ec2_instance_id
-    InstanceId = var.prod_ec2_instance_id
   }
 }
 
@@ -52,7 +50,6 @@ resource "aws_cloudwatch_metric_alarm" "ec2_memory" {
 
   dimensions = {
     InstanceId = var.stag_ec2_instance_id
-    InstanceId = var.prod_ec2_instance_id
   }
 }
 
@@ -71,7 +68,6 @@ resource "aws_cloudwatch_metric_alarm" "ec2_disk" {
 
   dimensions = {
     InstanceId = var.stag_ec2_instance_id
-    InstanceId = var.prod_ec2_instance_id
     path       = "/"
   }
 }
@@ -91,7 +87,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    DBInstanceIdentifier = var.prod_rds_identifier
     DBInstanceIdentifier = var.stag_rds_identifier
   }
 }
@@ -110,7 +105,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_memory" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    DBInstanceIdentifier = var.prod_rds_identifier
     DBInstanceIdentifier = var.stag_rds_identifier
   }
 }
@@ -129,7 +123,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_storage" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    DBInstanceIdentifier = var.prod_rds_identifier
     DBInstanceIdentifier = var.stag_rds_identifier
   }
 }
@@ -148,7 +141,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_connections" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    DBInstanceIdentifier = var.prod_rds_identifier
     DBInstanceIdentifier = var.stag_rds_identifier
   }
 }
@@ -168,7 +160,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_cpu" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    CacheClusterId = var.prod_redis_cluster_id
     CacheClusterId = var.stag_redis_cluster_id
   }
 }
@@ -187,7 +178,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_memory" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    CacheClusterId = var.prod_redis_cluster_id
     CacheClusterId = var.stag_redis_cluster_id
   }
 }
@@ -206,7 +196,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_cache_hits" {
   ok_actions          = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    CacheClusterId = var.prod_redis_cluster_id
     CacheClusterId = var.stag_redis_cluster_id
   }
 }

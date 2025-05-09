@@ -28,19 +28,3 @@ variable "stag_redis_cluster_id" {
   description = "ElastiCache Redis cluster id."
   type        = string
 }
-
-#----------------------production----------------------#
-variable "prod_ec2_instance_id" {
-  description = "EC2 instance type for the application server."
-  type        = string
-}
-
-variable "prod_rds_identifier" {
-  description = "RDS instance class."
-  type        = string
-}
-
-variable "prod_redis_cluster_id" {
-  description = "ElastiCache Redis cluster id."
-  type        = string
-}
