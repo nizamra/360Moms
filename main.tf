@@ -11,78 +11,50 @@ module "network" {
   vpc_cidr           = var.vpc_cidr
 }
 
-module "roles" {
-  source = "./modules/roles"
-  prefix = local.name_prefix
-}
-
-# Staging Environment
-module "staging" {
-  source             = "./modules/environment"
-  environment        = "staging"
+module "ec2" {
+  source             = "./modules/ec2"
   prefix             = "staging"
-  availability_zones = var.availability_zones
-  public_subnets     = var.public_subnets
-  private_subnets    = var.private_subnets
-  vpc_cidr           = var.vpc_cidr
+  ami_id             = var.stag_ami_id
+  instance_type      = var.stag_instance_type
+  private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
+  rds_endpoint       = module.rds.rds_endpoint
+  redis_endpoint     = module.redis.redis_endpoint
+  db_username        = var.stag_db_username
+  db_password        = var.stag_db_password
+}
 
-  instance_type           = var.stag_instance_type
-  ami_id                  = var.stag_ami_id
-  db_engine               = var.db_engine
-  db_instance_class       = var.stag_db_instance_class
-  db_storage              = var.stag_db_storage
-  db_storage_type         = var.stag_db_storage_type
-  max_db_storage          = var.stag_max_db_storage
-  db_username             = var.stag_db_username
-  db_password             = var.stag_db_password
+module "rds" {
+  source                = "./modules/rds"
+  prefix                = "staging"
+  db_engine             = var.db_engine
+  db_instance_class     = var.stag_db_instance_class
+  db_storage            = var.stag_db_storage
+  db_storage_type       = var.stag_db_storage_type
+  max_db_storage        = var.stag_max_db_storage
+  db_username           = var.stag_db_username
+  db_password           = var.stag_db_password
+  private_subnet_ids    = module.network.private_subnet_ids
+  rds_security_group_id = module.network.rds_security_group_id
+}
+
+module "redis" {
+  source                  = "./modules/redis"
+  prefix                  = "staging"
   redis_node_type         = var.stag_redis_node_type
-  ec2_role_name           = module.roles.ec2_role_name
   private_subnet_ids      = module.network.private_subnet_ids
-  rds_security_group_id   = module.network.rds_security_group_id
   redis_security_group_id = module.network.redis_security_group_id
 }
 
-# Production Environment
-module "production" {
-  source             = "./modules/environment"
-  environment        = "production"
-  prefix             = "production"
-  availability_zones = var.availability_zones
-  public_subnets     = var.public_subnets
-  private_subnets    = var.private_subnets
-  vpc_cidr           = var.vpc_cidr
-  security_group_id  = module.network.security_group_id
+module "cloudwatch" {
+  source     = "./modules/cloudwatch"
+  aws_region = var.aws_region
+  vpc_id     = module.network.vpc_id
 
-  instance_type           = var.prod_instance_type
-  ami_id                  = var.prod_ami_id
-  db_engine               = var.db_engine
-  db_instance_class       = var.prod_db_instance_class
-  db_storage              = var.prod_db_storage
-  db_storage_type         = var.prod_db_storage_type
-  max_db_storage          = var.prod_max_db_storage
-  db_username             = var.prod_db_username
-  db_password             = var.prod_db_password
-  redis_node_type         = var.prod_redis_node_type
-  ec2_role_name           = module.roles.ec2_role_name
-  private_subnet_ids      = module.network.private_subnet_ids
-  rds_security_group_id   = module.network.rds_security_group_id
-  redis_security_group_id = module.network.redis_security_group_id
+  stag_ec2_instance_id  = module.ec2.ec2_instance_id
+  stag_rds_identifier   = module.rds.rds_identifier
+  stag_redis_cluster_id = module.redis.redis_cluster_id
+  alert_email           = "alerts@example.com" # TODO: Replace with actual email address
+
+  depends_on = [module.network, module.ec2, module.rds, module.redis]
 }
-
-# module "cloudwatch" {
-#   source     = "./modules/cloudwatch"
-#   aws_region = var.aws_region
-#   vpc_id     = module.network.vpc_id
-
-#   # Resource IDs for monitoring
-#   stag_ec2_instance_id  = module.staging.ec2_instance_id
-#   stag_rds_identifier   = module.staging.rds_identifier
-#   stag_redis_cluster_id = module.staging.redis_cluster_id
-#   prod_ec2_instance_id  = module.production.ec2_instance_id
-#   prod_rds_identifier   = module.production.rds_identifier
-#   prod_redis_cluster_id = module.production.redis_cluster_id
-#   alert_email           = "alerts@example.com" # TODO: Replace with actual email address
-
-#   depends_on = [module.network, module.staging, module.production]
-# }
