@@ -9,42 +9,61 @@ This repository contains the infrastructure code for the 360Moms project, built 
 ├── main.tf                 # Main Terraform configuration
 ├── variables.tf            # Variable definitions
 ├── provider.tf             # Provider configuration
+├── values.auto.tfvars      # Auto-generated variable values
+├── terraform.tfvars        # Custom variable values
 └── modules/
     ├── network/            # Network module
     │   ├── variables.tf    # Network variables
     │   ├── vpc.tf          # VPC configuration
     │   └── outputs.tf      # Network outputs 
-    ├── environment/        # Environment module (staging/production)
-    │   ├── variables.tf    # Environment variables
-    │   ├── ec2.tf          # EC2 instance configuration
-    │   ├── rds.tf          # RDS database configuration
-    │   ├── redis.tf        # Redis cache configuration
-    │   └── outputs.tf      # Module outputs
+    ├── ec2/               # EC2 module
+    │   ├── variables.tf    # EC2 variables
+    │   ├── main.tf         # EC2 instance configuration
+    │   └── outputs.tf      # EC2 outputs
+    ├── rds/               # RDS module
+    │   ├── variables.tf    # RDS variables
+    │   ├── main.tf         # RDS configuration
+    │   └── outputs.tf      # RDS outputs
+    ├── redis/             # Redis module
+    │   ├── variables.tf    # Redis variables
+    │   ├── main.tf         # Redis configuration
+    │   └── outputs.tf      # Redis outputs
     └── cloudwatch/         # Monitoring module
         ├── variables.tf    # CloudWatch variables
-        ├── cloudwatch_alarm.tf      # CloudWatch alarms
-        ├── cloudwatch_log_groups.tf # CloudWatch log groups
-        └── cloudwatch_dashboard.tf  # CloudWatch dashboards
+        ├── main.tf         # CloudWatch configuration
+        └── outputs.tf      # CloudWatch outputs
 ```
 
 ## Infrastructure Components
 
-The infrastructure includes the following components for both staging and production environments:
+The infrastructure includes the following components:
 
 - **Network Module**: 
   - Custom VPC with public and private subnets
   - Internet Gateway, NAT Gateway
-  - Security Groups
+  - Security Groups for EC2, RDS, and Redis
 
-- **Environment Module**:
-  - **EC2 Instances**: Application servers with Docker and Nginx
-  - **RDS Database**: MySQL managed database service 
-  - **Redis Cache**: ElastiCache for Redis
+- **EC2 Module**:
+  - Application servers in private subnets
+  - Integration with RDS and Redis endpoints
+  - Security group configuration
+
+- **RDS Module**:
+  - MySQL managed database service
+  - Configurable instance class and storage
+  - Private subnet deployment
+  - Security group configuration
+
+- **Redis Module**:
+  - ElastiCache for Redis
+  - Configurable node type
+  - Private subnet deployment
+  - Security group configuration
 
 - **CloudWatch Module**: 
   - Comprehensive monitoring and alerting
-  - Log groups for application, Nginx, system, RDS, and Redis logs
-  - Metric filters and alarms for critical resources
+  - Metric collection for EC2, RDS, and Redis
+  - Email notifications for alerts
 
 ## Prerequisites
 
@@ -65,34 +84,32 @@ The infrastructure includes the following components for both staging and produc
    terraform init
    ```
 
-3. Set the required variables in a `terraform.tfvars` file:
-   ```bash
-   # AWS region
+3. Configure your variables in `terraform.tfvars`:
+   ```hcl
+   environment = "staging"
    aws_region = "us-east-1"
    
-   # Networking
+   # Network configuration
    vpc_cidr = "10.0.0.0/16"
    public_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
    private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
    availability_zones = ["us-east-1a", "us-east-1b"]
    
-   # Staging environment
-   stag_instance_type = "t2.micro"
+   # EC2 configuration
    stag_ami_id = "ami-xxxxxxxxxxxxxxxxx"
+   stag_instance_type = "t2.micro"
+   
+   # RDS configuration
+   db_engine = "mysql"
    stag_db_instance_class = "db.t3.micro"
    stag_db_storage = 20
+   stag_db_storage_type = "gp2"
+   stag_max_db_storage = 100
    stag_db_username = "admin"
    stag_db_password = "your-secure-password"
-   stag_redis_node_type = "cache.t3.micro"
    
-   # Production environment
-   prod_instance_type = "t2.micro"
-   prod_ami_id = "ami-xxxxxxxxxxxxxxxxx"
-   prod_db_instance_class = "db.t3.micro"
-   prod_db_storage = 20
-   prod_db_username = "admin"
-   prod_db_password = "your-secure-password"
-   prod_redis_node_type = "cache.t3.micro"
+   # Redis configuration
+   stag_redis_node_type = "cache.t3.micro"
    ```
 
 4. Plan the deployment:
@@ -105,35 +122,28 @@ The infrastructure includes the following components for both staging and produc
    terraform apply
    ```
 
-## Environment Configuration
-
-The infrastructure supports two environments:
-
-1. **Staging Environment**
-   - Configured for testing and development
-   - Separate EC2, RDS, and Redis instances
-   - Full CloudWatch monitoring
-
-2. **Production Environment**
-   - Configured for production workloads
-   - Separate EC2, RDS, and Redis instances
-   - Full CloudWatch monitoring
-
 ## Security
 
-- Network security is implemented through VPC and security groups
-- IAM roles for EC2 to access CloudWatch
-- Database credentials are managed securely
+- Network security through VPC and security groups
 - Private subnets for database and cache resources
+- Secure credential management
+- IAM roles for service access
 
 ## Monitoring
 
-The CloudWatch module provides comprehensive monitoring:
+The CloudWatch module provides monitoring for:
 
-- **CloudWatch Log Groups**: Collects logs from applications, Nginx, system logs, RDS, and Redis
-- **Metric Filters**: Extracts patterns from logs to create metrics
-- **CloudWatch Alarms**: Configured for:
-  - EC2: CPU utilization, status checks, memory, disk usage
-  - RDS: CPU utilization, freeable memory, storage, connections
-  - Redis: CPU utilization, freeable memory, cache hit rate
-- **SNS Notifications**: Alerts sent to specified email addresses
+- EC2 instances: CPU, memory, and disk metrics
+- RDS instances: CPU, memory, storage, and connection metrics
+- Redis clusters: CPU, memory, and cache metrics
+- Email notifications for critical alerts
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Submit a pull request
+
+## License
+
+[Add your license information here]
