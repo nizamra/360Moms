@@ -25,3 +25,13 @@ output "rds_security_group_id" {
 output "redis_security_group_id" {
   value = aws_security_group.redis.id
 }
+
+output "rds_subnet_group_name" {
+  value       = aws_db_subnet_group.rds.name
+  description = "The name of the RDS subnet group"
+}
+
+output "redis_subnet_group_name" {
+  value       = aws_elasticache_subnet_group.redis.name
+  description = "The name of the Redis subnet group"
+}

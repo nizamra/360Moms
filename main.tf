@@ -36,6 +36,7 @@ module "rds" {
   db_password           = var.stag_db_password
   private_subnet_ids    = module.network.private_subnet_ids
   rds_security_group_id = module.network.rds_security_group_id
+  rds_subnet_group_name = module.network.rds_subnet_group_name
 }
 
 module "redis" {
@@ -44,6 +45,7 @@ module "redis" {
   redis_node_type         = var.stag_redis_node_type
   private_subnet_ids      = module.network.private_subnet_ids
   redis_security_group_id = module.network.redis_security_group_id
+  redis_subnet_group_name = module.network.redis_subnet_group_name
 }
 
 module "cloudwatch" {

@@ -63,12 +63,6 @@ resource "aws_nat_gateway" "nat" {
   }
 }
 
-resource "aws_route_table_association" "private" {
-  count          = length(var.private_subnets)
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private[count.index].id
-}
-
 resource "aws_route_table" "private" {
   count  = length(var.private_subnets)
   vpc_id = aws_vpc.private_cloud.id
@@ -79,22 +73,95 @@ resource "aws_route_table" "private" {
   }
 }
 
-# Security Group for EC2
-resource "aws_security_group" "ec2" {
-  name        = "ec2-sg"
-  description = "Allow SSH, HTTP, and HTTPS"
+resource "aws_route_table_association" "private" {
+  count          = length(var.private_subnets)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
+# Create a public route table with a default route to the Internet Gateway
+resource "aws_route_table" "public" {
+  count  = length(var.network.public_subnets)
+  vpc_id = aws_vpc.private_cloud.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+}
+
+# Associate public subnets with the public route table
+resource "aws_route_table_association" "public" {
+  count          = length(var.network.public_subnets)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+# Create an RDS Subnet Group using private subnets
+resource "aws_db_subnet_group" "rds" {
+  name       = "${var.prefix}-rds-subnet-group"
+  subnet_ids = aws_subnet.private[*].id
+}
+
+# Create an ElastiCache Subnet Group using private subnets
+resource "aws_elasticache_subnet_group" "redis" {
+  name       = "${var.prefix}-redis-subnet-group"
+  subnet_ids = aws_subnet.private[*].id
+}
+
+# Create an ALB Target Group with health checks configured
+resource "aws_lb_target_group" "nginx" {
+  name     = "${var.prefix}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.private_cloud.id
+
+  health_check {
+    path                = "/"
+    interval            = 30
+    timeout             = 10
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200-399"
+  }
+
+  tags = {
+    Name = "${var.prefix}-tg"
+  }
+}
+
+# Create the Application Load Balancer (ALB)
+resource "aws_lb" "nginx" {
+  name               = "${var.prefix}-alb"
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = aws_subnet.public[*].id
+  internal           = false
+  enable_deletion_protection = false
+
+  tags = {
+    Name = "${var.prefix}-alb"
+  }
+}
+
+# Create a listener on the ALB for incoming HTTP/HTTPS traffic
+resource "aws_lb_listener" "nginx" {
+  load_balancer_arn = aws_lb.nginx.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.nginx.arn
+  }
+}
+
+resource "aws_security_group" "alb" {
+  name        = "${var.prefix}-alb-sg"
+  description = "Allow HTTP/HTTPS from internet to ALB"
   vpc_id      = aws_vpc.private_cloud.id
 
   ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTP"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -102,7 +169,6 @@ resource "aws_security_group" "ec2" {
   }
 
   ingress {
-    description = "HTTPS"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -116,22 +182,30 @@ resource "aws_security_group" "ec2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow EC2-> RDS MySQL access
+  tags = {
+    Name = "${var.prefix}-alb-sg"
+  }
+}
+
+# Security Group for EC2
+resource "aws_security_group" "ec2" {
+  name        = "ec2-sg"
+  description = "Allow SSH, HTTP, and HTTPS"
+  vpc_id      = aws_vpc.private_cloud.id
+
   ingress {
-    description = "MySQL Access"
-    from_port   = 3306
-    to_port     = 3306
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
-    self        = true # Allow instances with this SG to communicate
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow EC2-> Redis access
-  ingress {
-    description = "Redis Access"
-    from_port   = 6379
-    to_port     = 6379
-    protocol    = "tcp"
-    self        = true
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
