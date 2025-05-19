@@ -132,11 +132,11 @@ resource "aws_lb_target_group" "nginx" {
 
 # Create the Application Load Balancer (ALB)
 resource "aws_lb" "nginx" {
-  name               = "${var.prefix}-alb"
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
-  internal           = false
+  name                       = "${var.prefix}-alb"
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb.id]
+  subnets                    = aws_subnet.public[*].id
+  internal                   = false
   enable_deletion_protection = false
 
   tags = {

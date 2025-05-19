@@ -23,7 +23,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "staging EC2 CPU" } ]
+          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.ec2_instance_id}", { "label": "staging EC2 CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", { "label": "staging EC2 Memory" } ]
+          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.ec2_instance_id}", { "label": "staging EC2 Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -55,7 +55,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", "path", "/", { "label": "staging EC2 Disk" } ]
+          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.ec2_instance_id}", "path", "/", { "label": "staging EC2 Disk" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "staging RDS CPU" } ]
+          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.rds_identifier}", { "label": "staging RDS CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -87,7 +87,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.stag_rds_identifier}", { "label": "staging RDS Memory" } ]
+          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.rds_identifier}", { "label": "staging RDS Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -103,7 +103,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "staging Redis CPU" } ]
+          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.redis_cluster_id}", { "label": "staging Redis CPU" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -119,7 +119,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.stag_redis_cluster_id}", { "label": "staging Redis Memory" } ]
+          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.redis_cluster_id}", { "label": "staging Redis Memory" } ]
         ],
         "period": 300,
         "stat": "Average",
@@ -150,7 +150,7 @@ EOF
 }
 
 # staging EC2 Dashboard
-resource "aws_cloudwatch_dashboard" "stag_ec2" {
+resource "aws_cloudwatch_dashboard" "ec2" {
   dashboard_name = "staging-ec2-dashboard"
 
   dashboard_body = <<EOF
@@ -174,7 +174,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.stag_ec2_instance_id}" ]
+          [ "AWS/EC2", "CPUUtilization", "InstanceId", "${var.ec2_instance_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -190,7 +190,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.stag_ec2_instance_id}" ]
+          [ "CWAgent", "mem_used_percent", "InstanceId", "${var.ec2_instance_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -206,7 +206,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.stag_ec2_instance_id}", "path", "/" ]
+          [ "CWAgent", "disk_used_percent", "InstanceId", "${var.ec2_instance_id}", "path", "/" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -222,7 +222,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "NetworkIn", "InstanceId", "${var.stag_ec2_instance_id}" ]
+          [ "AWS/EC2", "NetworkIn", "InstanceId", "${var.ec2_instance_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -238,7 +238,7 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "NetworkOut", "InstanceId", "${var.stag_ec2_instance_id}" ]
+          [ "AWS/EC2", "NetworkOut", "InstanceId", "${var.ec2_instance_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -254,8 +254,8 @@ resource "aws_cloudwatch_dashboard" "stag_ec2" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/EC2", "StatusCheckFailed_Instance", "InstanceId", "${var.stag_ec2_instance_id}" ],
-          [ "AWS/EC2", "StatusCheckFailed_System", "InstanceId", "${var.stag_ec2_instance_id}" ]
+          [ "AWS/EC2", "StatusCheckFailed_Instance", "InstanceId", "${var.ec2_instance_id}" ],
+          [ "AWS/EC2", "StatusCheckFailed_System", "InstanceId", "${var.ec2_instance_id}" ]
         ],
         "period": 300,
         "stat": "Maximum",
@@ -269,7 +269,7 @@ EOF
 }
 
 # staging RDS Dashboard
-resource "aws_cloudwatch_dashboard" "stag_rds" {
+resource "aws_cloudwatch_dashboard" "rds" {
   dashboard_name = "staging-rds-dashboard"
 
   dashboard_body = <<EOF
@@ -293,7 +293,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -309,7 +309,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -325,7 +325,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -341,7 +341,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -357,7 +357,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "ReadIOPS", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "ReadIOPS", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -373,7 +373,7 @@ resource "aws_cloudwatch_dashboard" "stag_rds" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/RDS", "WriteIOPS", "DBInstanceIdentifier", "${var.stag_rds_identifier}" ]
+          [ "AWS/RDS", "WriteIOPS", "DBInstanceIdentifier", "${var.rds_identifier}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -387,7 +387,7 @@ EOF
 }
 
 # staging Redis Dashboard
-resource "aws_cloudwatch_dashboard" "stag_redis" {
+resource "aws_cloudwatch_dashboard" "redis" {
   dashboard_name = "staging-redis-dashboard"
 
   dashboard_body = <<EOF
@@ -411,7 +411,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -427,7 +427,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "FreeableMemory", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -443,7 +443,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "CacheHitRate", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "CacheHitRate", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -459,7 +459,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "CurrConnections", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "CurrConnections", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Average",
@@ -475,7 +475,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "GetTypeCmds", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "GetTypeCmds", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Sum",
@@ -491,7 +491,7 @@ resource "aws_cloudwatch_dashboard" "stag_redis" {
       "height": 6,
       "properties": {
         "metrics": [
-          [ "AWS/ElastiCache", "SetTypeCmds", "CacheClusterId", "${var.stag_redis_cluster_id}" ]
+          [ "AWS/ElastiCache", "SetTypeCmds", "CacheClusterId", "${var.redis_cluster_id}" ]
         ],
         "period": 300,
         "stat": "Sum",

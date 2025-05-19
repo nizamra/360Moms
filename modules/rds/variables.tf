@@ -38,12 +38,12 @@ variable "db_password" {
   type        = string
 }
 
-variable "rds_security_group_id" {
+variable "db_security_group_id" {
   description = "The ID of the security group for RDS"
   type        = string
 }
 
-variable "rds_subnet_group_name" {
+variable "db_subnet_group_name" {
   description = "The name of the RDS subnet group"
   type        = string
 }
@@ -51,4 +51,9 @@ variable "rds_subnet_group_name" {
 variable "private_subnet_ids" {
   description = "List of private subnet IDs for RDS"
   type        = list(string)
+}
+
+variable "iam_authentication" {
+  description = "Enable IAM authentication for RDS"
+  type        = bool
 }

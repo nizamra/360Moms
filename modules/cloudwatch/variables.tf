@@ -1,3 +1,4 @@
+#----------------------GENERAL----------------------#
 variable "aws_region" {
   description = "The AWS region to deploy the resources in"
   type        = string
@@ -13,18 +14,23 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "prefix" {
+  description = "Prefix for resource names"
+  type        = string
+}
+
 #----------------------staging----------------------#
-variable "stag_ec2_instance_id" {
+variable "ec2_instance_id" {
   description = "EC2 instance type for the application server."
   type        = string
 }
 
-variable "stag_rds_identifier" {
+variable "rds_identifier" {
   description = "RDS instance class."
   type        = string
 }
 
-variable "stag_redis_cluster_id" {
+variable "redis_cluster_id" {
   description = "ElastiCache Redis cluster id."
   type        = string
 }
