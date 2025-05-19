@@ -17,7 +17,7 @@ module "ec2" {
   security_group_id                     = module.network.security_group_id
   target_group_arn                      = module.network.target_group_arn
   redis_endpoint                        = module.redis.redis_endpoint
-  db_endpoint                           = module.rds.rds_endpoint
+  db_endpoint                           = module.rds.db_endpoint
   db_resource_id                        = module.rds.db_resource_id
   db_username                           = var.db_username
   db_password                           = var.db_password

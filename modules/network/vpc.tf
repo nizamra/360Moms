@@ -81,7 +81,7 @@ resource "aws_route_table_association" "private" {
 
 # Create a public route table with a default route to the Internet Gateway
 resource "aws_route_table" "public" {
-  count  = length(var.network.public_subnets)
+  count  = length(var.public_subnets)
   vpc_id = aws_vpc.private_cloud.id
 
   route {
@@ -92,9 +92,9 @@ resource "aws_route_table" "public" {
 
 # Associate public subnets with the public route table
 resource "aws_route_table_association" "public" {
-  count          = length(var.network.public_subnets)
+  count          = length(var.public_subnets)
   subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public.id
+  route_table_id = aws_route_table.public[count.index].id
 }
 
 # Create an RDS Subnet Group using private subnets

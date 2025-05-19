@@ -11,10 +11,11 @@ resource "aws_launch_template" "app" {
 
   user_data = base64encode(templatefile("${path.module}/user_data.tmpl", {
     log_group_prefix = var.prefix,
-    db_user          = var.db_username,
-    db_port          = 3306
-    region           = var.aws_region
-  }))
+    db_user = var.db_username,
+    db_port = 3306,
+    region = var.aws_region
+  }
+    ))
 }
 
 # Auto Scaling Group to maintain two instances
