@@ -1,6 +1,8 @@
+data "aws_caller_identity" "current" {}
+
 # IAM Role for EC2
 resource "aws_iam_role" "ec2_role" {
-  name                  = "${var.prefix}-ec2-role"
+  name                  = "${var.name_prefix}-ec2-role"
   force_detach_policies = true
 
   assume_role_policy = jsonencode({
@@ -17,7 +19,7 @@ resource "aws_iam_role" "ec2_role" {
   })
 
   tags = {
-    Name = "${var.prefix}-ec2-role"
+    Name = "${var.name_prefix}-ec2-role"
   }
 }
 
@@ -33,8 +35,25 @@ resource "aws_iam_role_policy_attachment" "ec2_ssm" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+resource "aws_iam_policy" "rds_connect" {
+  name = "${var.name_prefix}-rds-connect"
+
+  policy = templatefile("${path.module}/rds_connect_policy.json", {
+    region         = var.aws_region,
+    account_id     = data.aws_caller_identity.current.account_id,
+    db_resource_id = var.db_resource_id,
+    db_username    = var.db_username,
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "rds_connect_attachment" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.rds_connect.arn
+}
+
+
 # IAM Instance Profile
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${var.prefix}-ec2-profile"
+  name = "${var.name_prefix}-ec2-profile"
   role = aws_iam_role.ec2_role.name
 }

@@ -19,7 +19,7 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-variable "prefix" {
-  description = "prefix named after the environment."
+variable "name_prefix" {
+  description = "Name prefix for the resources."
   type        = string
 }

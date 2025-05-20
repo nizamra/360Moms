@@ -1,19 +1,24 @@
-variable "prefix" {
-  description = "Prefix for resource names"
+variable "name_prefix" {
+  description = "Prefix for resources"
   type        = string
 }
 
 variable "redis_node_type" {
-  description = "ElastiCache node type"
+  description = "The node type for Redis cluster"
   type        = string
 }
 
 variable "redis_security_group_id" {
-  description = "Security group ID for Redis"
+  description = "The ID of the security group for Redis"
   type        = string
 }
 
-variable "private_subnet_ids" {
-  description = "List of private subnet IDs for Redis"
-  type        = list(string)
-} 
+variable "redis_subnet_group_name" {
+  description = "The name of the Redis subnet group"
+  type        = string
+}
+
+variable "redis_cache_clusters" {
+  description = "The number of cache clusters for Redis"
+  type        = number
+}

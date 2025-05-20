@@ -1,0 +1,208 @@
+#!/bin/bash
+set -xe
+
+# ==========
+# ENV SETUP
+# ==========
+# Passed from Terraform via templatefile()
+
+db_host="rds-${log_group_prefix}.xxxxxxxx.${region}.rds.amazonaws.com"
+
+# ==========
+# INSTALL TOOLS
+# ==========
+# Amazon Linux 2 uses yum; if you're on Ubuntu, replace with apt
+yum update -y
+yum install -y docker nginx amazon-cloudwatch-agent awscli mysql
+
+# ==========
+# RDS IAM Auth Test
+# ==========
+# Generate IAM token for RDS
+token=$(aws rds generate-db-auth-token \
+  --hostname "$db_host" \
+  --port "$db_port" \
+  --region "$region" \
+  --username "$db_user")
+
+# Attempt MySQL connection (logs in application.log)
+mysql -h "$db_host" \
+  -u "$db_user" \
+  --password="$token" \
+  --enable-cleartext-plugin \
+  -e "SELECT now();" >> /var/log/application.log 2>&1
+
+# ==========
+# SETUP LOG FILES
+# ==========
+touch /var/log/application.log
+chmod 644 /var/log/application.log
+echo "Application started on $(date)" >> /var/log/application.log
+
+# ==========
+# CLOUDWATCH CONFIG
+# ==========
+cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<EOF
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/nginx/error.log",
+            "log_group_name": "/aws/ec2/nginx-${log_group_prefix}",
+            "log_stream_name": "{instance_id}-error"
+          },
+          {
+            "file_path": "/var/log/nginx/access.log",
+            "log_group_name": "/aws/ec2/nginx-${log_group_prefix}",
+            "log_stream_name": "{instance_id}-access"
+          },
+          {
+            "file_path": "/var/log/syslog",
+            "log_group_name": "/aws/ec2/system-${log_group_prefix}",
+            "log_stream_name": "{instance_id}-syslog"
+          },
+          {
+            "file_path": "/var/log/application.log",
+            "log_group_name": "/aws/ec2/application-${log_group_prefix}",
+            "log_stream_name": "{instance_id}-app"
+          },
+          {
+            "file_path": "/var/log/connectivity_check.log",
+            "log_group_name": "/aws/ec2/connectivity-${log_group_prefix}",
+            "log_stream_name": "{instance_id}-connectivity"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "metrics_collected": {
+      "cpu": {
+        "measurement": ["cpu_usage_idle", "cpu_usage_user"],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": ["mem_used_percent"],
+        "metrics_collection_interval": 60
+      },
+      "disk": {
+        "resources": ["/"],
+        "measurement": ["used_percent"],
+        "metrics_collection_interval": 60
+      }
+    }
+  }
+}
+EOF
+
+# ==========
+# SETUP CONNECTIVITY MONITORING
+# ==========
+# Create parameter store entries with RDS and Redis endpoints
+aws ssm put-parameter \
+  --name "/infra/database/endpoint" \
+  --value "$db_host" \
+  --type "String" \
+  --overwrite \
+  --region "$region"
+
+aws ssm put-parameter \
+  --name "/infra/redis/endpoint" \
+  --value "redis-${log_group_prefix}.xxxxxxxx.${region}.cache.amazonaws.com" \
+  --type "String" \
+  --overwrite \
+  --region "$region"
+
+# Run the connectivity monitor setup script
+cat > /tmp/setup_connectivity_monitor.sh <<'EOT'
+#!/bin/bash
+
+# Script to set up connectivity monitoring on EC2 instances
+
+# Install required packages
+if command -v apt-get &> /dev/null; then
+    # Debian/Ubuntu
+    apt-get update
+    apt-get install -y mysql-client redis-tools awscli
+elif command -v yum &> /dev/null; then
+    # Amazon Linux/RHEL/CentOS
+    yum update -y
+    yum install -y mariadb redis awscli
+fi
+
+# Ensure scripts directory exists
+mkdir -p /opt/monitoring/scripts
+
+# Copy the connectivity check script
+cat > /opt/monitoring/scripts/connectivity_check.sh << 'EOF'
+#!/bin/bash
+
+# Script to check database and cache connectivity and publish metrics to CloudWatch
+
+# Get instance metadata
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')
+
+# Get RDS and Redis endpoints from SSM Parameter Store 
+RDS_ENDPOINT=$(aws ssm get-parameter --name "/infra/database/endpoint" --region $REGION --query "Parameter.Value" --output text)
+REDIS_ENDPOINT=$(aws ssm get-parameter --name "/infra/redis/endpoint" --region $REGION --query "Parameter.Value" --output text)
+
+# Check RDS connectivity
+mysql -h $RDS_ENDPOINT -u dummy -pdummy -e "SELECT 1" &> /dev/null
+DB_STATUS=$?
+
+# Check Redis connectivity 
+redis-cli -h $REDIS_ENDPOINT PING &> /dev/null
+CACHE_STATUS=$?
+
+# Publish metrics to CloudWatch
+aws cloudwatch put-metric-data \
+  --region $REGION \
+  --namespace EC2Connectivity \
+  --metric-name DatabaseConnectivity \
+  --dimensions InstanceId=$INSTANCE_ID \
+  --value $((DB_STATUS == 0 ? 1 : 0))
+
+aws cloudwatch put-metric-data \
+  --region $REGION \
+  --namespace EC2Connectivity \
+  --metric-name CacheConnectivity \
+  --dimensions InstanceId=$INSTANCE_ID \
+  --value $((CACHE_STATUS == 0 ? 1 : 0))
+
+# Log results
+echo "Database connectivity check: $((DB_STATUS == 0 ? "Success" : "Failed"))"
+echo "Cache connectivity check: $((CACHE_STATUS == 0 ? "Success" : "Failed"))"
+
+exit 0
+EOF
+
+# Make the script executable
+chmod +x /opt/monitoring/scripts/connectivity_check.sh
+
+# Set up cron job to run every minute
+(crontab -l 2>/dev/null; echo "* * * * * /opt/monitoring/scripts/connectivity_check.sh >> /var/log/connectivity_check.log 2>&1") | crontab -
+
+# Create log file and set permissions
+touch /var/log/connectivity_check.log
+chmod 644 /var/log/connectivity_check.log
+
+echo "Connectivity monitoring has been set up successfully."
+
+exit 0
+EOT
+
+chmod +x /tmp/setup_connectivity_monitor.sh
+/tmp/setup_connectivity_monitor.sh >> /var/log/setup_connectivity_monitor.log 2>&1
+
+# ==========
+# START SERVICES
+# ==========
+systemctl start amazon-cloudwatch-agent docker nginx
+systemctl enable amazon-cloudwatch-agent docker nginx
