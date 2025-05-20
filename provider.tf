@@ -21,10 +21,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      repo        = var.github_repo
-      creator     = var.creator_name
-      Project     = var.project_name
-      Environment = var.environment
+      repo    = var.github_repo
+      creator = var.creator_name
+      Project = var.project_name
     }
   }
 }

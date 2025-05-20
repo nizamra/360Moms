@@ -1,7 +1,6 @@
 #----------------------GENERAL----------------------#
 aws_region   = "me-south-1"
-name_prefix  = "staging"
-environment  = "staging"
+name_prefix  = "production"
 project_name = "test-project"
 github_repo  = "https://github.com/"
 creator_name = "360MomsIT"
@@ -37,3 +36,59 @@ iam_authentication = true # TODO: Change to false in production
 
 #----------------------REDIS----------------------#
 redis_cache_clusters = 1 # TODO: Change to 2 in production
+
+#----------------------CLOUDWATCH----------------------#
+group_paths = {
+  application = "/aws/ec2/application"
+  nginx       = "/aws/ec2/nginx"
+  system      = "/aws/ec2/system"
+  rds         = "/aws/rds/mysql-logs"
+  redis       = "/aws/elasticache/redis-logs"
+}
+retention_in_days = 7 # days
+alarm_namespace = {
+  ec2   = "AWS/EC2"
+  rds   = "AWS/RDS"
+  redis = "AWS/ElastiCache"
+  logs  = "LogMetrics"
+}
+alarm_metric = {
+  cpu        = "CPUUtilization"
+  memory     = "FreeableMemory"
+  conn       = "DatabaseConnections"
+  redis_conn = "CurrConnections"
+  # log‑derived metrics
+  nginx_5xx = "Nginx5xxErrorCount"
+  rds_error = "RDSErrorCount"
+  redis_err = "RedisErrorCount"
+  app_error = "ApplicationErrorCount"
+}
+alarm_threshold = {
+  cpu        = 80        # percent
+  memory     = 200000000 # bytes
+  conn       = 100       # number of connections
+  redis_conn = 100       # number of connections
+
+  # all log metrics trip at 1
+  nginx_5xx = 1 # count
+  rds_error = 1 # count
+  redis_err = 1 # count
+  app_error = 1 # count
+}
+alarm_dim = {
+  ec2   = "AutoScalingGroupName"
+  rds   = "DBInstanceIdentifier"
+  redis = "CacheClusterId"
+}
+alarm_attr = {
+  ec2   = "asg_name"
+  rds   = "rds_id"
+  redis = "redis_id"
+}
+alarm_common_settings = {
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1   # number of periods
+  period              = 300 # seconds
+  statistic           = "Sum"
+}
+alarm_alert_email = "alerts@example.com"

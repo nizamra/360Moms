@@ -99,19 +99,19 @@ resource "aws_route_table_association" "public" {
 
 # Create an RDS Subnet Group using private subnets
 resource "aws_db_subnet_group" "rds" {
-  name       = "${var.prefix}-rds-subnet-group"
+  name       = "${var.name_prefix}-rds-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 }
 
 # Create an ElastiCache Subnet Group using private subnets
 resource "aws_elasticache_subnet_group" "redis" {
-  name       = "${var.prefix}-redis-subnet-group"
+  name       = "${var.name_prefix}-redis-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 }
 
 # Create an ALB Target Group with health checks configured
 resource "aws_lb_target_group" "nginx" {
-  name     = "${var.prefix}-tg"
+  name     = "${var.name_prefix}-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.private_cloud.id
@@ -126,13 +126,13 @@ resource "aws_lb_target_group" "nginx" {
   }
 
   tags = {
-    Name = "${var.prefix}-tg"
+    Name = "${var.name_prefix}-tg"
   }
 }
 
 # Create the Application Load Balancer (ALB)
 resource "aws_lb" "nginx" {
-  name                       = "${var.prefix}-alb"
+  name                       = "${var.name_prefix}-alb"
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb.id]
   subnets                    = aws_subnet.public[*].id
@@ -140,7 +140,7 @@ resource "aws_lb" "nginx" {
   enable_deletion_protection = false
 
   tags = {
-    Name = "${var.prefix}-alb"
+    Name = "${var.name_prefix}-alb"
   }
 }
 
@@ -157,7 +157,7 @@ resource "aws_lb_listener" "nginx" {
 }
 
 resource "aws_security_group" "alb" {
-  name        = "${var.prefix}-alb-sg"
+  name        = "${var.name_prefix}-alb-sg"
   description = "Allow HTTP/HTTPS from internet to ALB"
   vpc_id      = aws_vpc.private_cloud.id
 
@@ -183,7 +183,7 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name = "${var.prefix}-alb-sg"
+    Name = "${var.name_prefix}-alb-sg"
   }
 }
 
@@ -215,7 +215,7 @@ resource "aws_security_group" "ec2" {
 
 # Security Group for RDS
 resource "aws_security_group" "rds" {
-  name        = "${var.prefix}-rds-sg"
+  name        = "${var.name_prefix}-rds-sg"
   description = "Allow inbound traffic to RDS from EC2"
   vpc_id      = aws_vpc.private_cloud.id
 
@@ -235,13 +235,13 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "${var.prefix}-rds-sg"
+    Name = "${var.name_prefix}-rds-sg"
   }
 }
 
 # Security Group for ElastiCache
 resource "aws_security_group" "redis" {
-  name        = "${var.prefix}-redis-sg"
+  name        = "${var.name_prefix}-redis-sg"
   description = "Allow inbound traffic to Redis from EC2"
   vpc_id      = aws_vpc.private_cloud.id
 
@@ -261,6 +261,6 @@ resource "aws_security_group" "redis" {
   }
 
   tags = {
-    Name = "${var.prefix}-redis-sg"
+    Name = "${var.name_prefix}-redis-sg"
   }
 }

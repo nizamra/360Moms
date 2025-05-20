@@ -1,5 +1,5 @@
 resource "aws_db_instance" "rds" {
-  identifier                          = "${var.prefix}-rds"
+  identifier                          = "${var.name_prefix}-rds"
   engine                              = var.db_engine
   instance_class                      = var.db_instance_class
   allocated_storage                   = var.db_storage
@@ -14,6 +14,6 @@ resource "aws_db_instance" "rds" {
   iam_database_authentication_enabled = var.iam_authentication
 
   tags = {
-    Name = "${var.prefix}-rds"
+    Name = "${var.name_prefix}-rds"
   }
 }

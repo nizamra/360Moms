@@ -6,16 +6,11 @@ variable "aws_region" {
 }
 
 variable "name_prefix" {
-  description = "Prefix for resource names"
-  type        = string
-}
-
-variable "environment" {
-  description = "Deployment environment name (staging, production)"
+  description = "Deployment name_prefix (staging, production)"
   type        = string
   validation {
-    condition     = contains(["staging", "production"], var.environment)
-    error_message = "Invalid environment. Valid values: staging, production"
+    condition     = contains(["staging", "production"], var.name_prefix)
+    error_message = "Invalid name_prefix. Valid values: staging, production"
   }
 }
 
@@ -154,4 +149,48 @@ variable "redis_cache_clusters" {
   type        = number
 }
 
+#----------------------CLOUDWATCH----------------------#
+variable "group_paths" {
+  description = "Paths to the log groups to monitor"
+  type        = map(string)
+}
 
+variable "retention_in_days" {
+  description = "Number of days to retain logs"
+  type        = number
+}
+
+variable "alarm_namespace" {
+  description = "Namespace for CloudWatch alarms"
+  type        = map(string)
+}
+
+variable "alarm_metric" {
+  description = "Metrics for CloudWatch alarms"
+  type        = map(string)
+}
+
+variable "alarm_threshold" {
+  description = "Thresholds for CloudWatch alarms"
+  type        = map(any)
+}
+
+variable "alarm_dim" {
+  description = "Dimensions for CloudWatch alarms"
+  type        = map(string)
+}
+
+variable "alarm_attr" {
+  description = "Attributes for CloudWatch alarms"
+  type        = map(string)
+}
+
+variable "alarm_common_settings" {
+  description = "Common settings for CloudWatch alarms"
+  type        = map(any)
+}
+
+variable "alarm_alert_email" {
+  description = "Email address for CloudWatch alerts"
+  type        = string
+}
