@@ -110,7 +110,7 @@ resource "aws_elasticache_subnet_group" "redis" {
 }
 
 # Create an ALB Target Group with health checks configured
-resource "aws_lb_target_group" "nginx" {
+resource "aws_lb_target_group" "app_tg" {
   name     = "${var.name_prefix}-tg"
   port     = 80
   protocol = "HTTP"
@@ -131,7 +131,7 @@ resource "aws_lb_target_group" "nginx" {
 }
 
 # Create the Application Load Balancer (ALB)
-resource "aws_lb" "nginx" {
+resource "aws_lb" "app_lb" {
   name                       = "${var.name_prefix}-alb"
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb.id]
@@ -144,15 +144,15 @@ resource "aws_lb" "nginx" {
   }
 }
 
-# Create a listener on the ALB for incoming HTTP/HTTPS traffic
-resource "aws_lb_listener" "nginx" {
-  load_balancer_arn = aws_lb.nginx.arn
-  port              = 80
-  protocol          = "HTTP"
+# Create a listener on the ALB for incoming HTTPS traffic
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.app_lb.arn
+  port              = 443
+  protocol          = "HTTPS"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.nginx.arn
+    target_group_arn = aws_lb_target_group.app_tg.arn
   }
 }
 

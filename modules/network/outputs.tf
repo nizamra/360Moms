@@ -37,5 +37,10 @@ output "redis_subnet_group_name" {
 }
 
 output "target_group_arn" {
-  value = aws_lb_target_group.nginx.arn
+  value = aws_lb_target_group.app_tg.arn  
 }
+
+output "alb_arn" {
+  value = aws_lb.app_lb.arn
+}
+
