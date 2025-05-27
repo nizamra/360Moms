@@ -1,101 +1,54 @@
-#----------------------GENERAL----------------------#
-variable "aws_region" {
-  description = "The AWS region to deploy the resources in"
-  type        = string
-}
+variable "aws_region" { type = string }
 
-variable "alarm_alert_email" {
-  description = "Email address to send CloudWatch alerts to"
-  type        = string
-}
-
-variable "vpc_id" {
-  description = "VPC ID for CloudWatch resources"
-  type        = string
-}
-
-variable "name_prefix" {
-  description = "Prefix for resource names"
-  type        = string
-}
-
-#----------------------staging----------------------#
-variable "ec2_instance_id" {
-  description = "EC2 instance type for the application server."
-  type        = string
-}
-
-variable "rds_identifier" {
-  description = "RDS instance class."
-  type        = string
-}
-
-variable "redis_cluster_id" {
-  description = "ElastiCache Redis cluster id."
-  type        = string
-}
-
-#----------------------ALARM FLAGS----------------------#
-variable "create_asg_alarms" {
-  description = "Whether to create Auto Scaling Group alarms"
-  type        = bool
-}
-
-variable "create_rds_alarms" {
-  description = "Whether to create RDS alarms"
-  type        = bool
-}
-
-variable "create_redis_alarms" {
-  description = "Whether to create Redis alarms"
-  type        = bool
-}
-
-#----------------------CLOUDWATCH----------------------#
-variable "group_paths" {
-  description = "Paths to the log groups to monitor"
-  type        = map(string)
-}
-
-variable "retention_in_days" {
-  description = "Number of days to retain logs"
-  type        = number
-}
-
-variable "env_configs" {
-  type = object({
+variable "env_configs" { 
+  type = map(object({ 
     asg_name = string
-    rds_id   = string
-    redis_id = string
+    rds_id = string
+    redis_id = string 
+  })) 
+}
+variable "vpc_id" { type = string }
+
+variable "alarm" {
+  description = "CloudWatch alarm configuration"
+  type = object({
+    namespace = map(string)
+    metric    = map(string)
+    threshold = map(number)
+    dim       = map(string)
+    attr      = map(string)
+    common_settings = object({
+      comparison_operator = string
+      evaluation_periods  = number
+      period              = number
+      statistic           = string
+    })
+    alert_email = string
   })
 }
 
-variable "alarm_namespace" {
-  description = "Namespace for CloudWatch alarms"
-  type        = map(string)
+
+
+variable "logs" {
+  description = "CloudWatch log configuration for all services"
+  type = object({
+    retention_in_days  = number
+    log_group_prefix   = map(string)         
+    group_paths        = map(string)
+    filters = object({
+      pattern = object({
+        error  = string
+        status = string
+      })
+      transformation = object({
+        name      = map(string)
+        namespace = string
+        value     = string
+      })
+    })
+  })
 }
 
-variable "alarm_metric" {
-  description = "Metrics for CloudWatch alarms"
-  type        = map(string)
-}
 
-variable "alarm_threshold" {
-  description = "Thresholds for CloudWatch alarms"
-  type        = map(any)
-}
 
-variable "alarm_dim" {
-  description = "Dimensions for CloudWatch alarms"
-  type        = map(string)
-}
 
-variable "alarm_attr" {
-  description = "Attributes for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_common_settings" {
-  description = "Common settings for CloudWatch alarms"
-  type        = map(any)
-}

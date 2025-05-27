@@ -1,196 +1,239 @@
-#----------------------GENERAL----------------------#
-variable "aws_region" {
-  description = "The AWS region to deploy the resources in"
-  type        = string
-  default     = "me-south-1"
+# ======================
+# Project Configuration
+# ======================
+variable "project_settings" {
+  description = "Project and region configuration"
+  type = object({
+    project    = string
+    aws_region = string
+  })
 }
 
-variable "name_prefix" {
-  description = "Deployment name_prefix (staging, production)"
-  type        = string
-  validation {
-    condition     = contains(["staging", "production"], var.name_prefix)
-    error_message = "Invalid name_prefix. Valid values: staging, production"
-  }
+
+# ======================
+# Network Configuration
+# ======================
+variable "network" {
+  description = "VPC and subnet configuration"
+  type = object({
+    enable_dns_support       = bool
+    enable_dns_hostnames     = bool
+    vpc_cidr                 = string
+    public_subnets           = list(string)
+    private_subnets          = list(string)
+    availability_zones       = list(string)
+    eip_domain               = string
+    default_route_cidr_block = string
+  })
 }
 
-variable "project_name" {
-  description = "The name of the project"
-  type        = string
+# ==========================
+# Securty Groups Configuration
+# ==========================
+variable "security_groups" {
+  description = "Security Groups configuration: ports and protocols"
+  type = object({
+    port = object({
+      http  = number
+      https = number
+      mysql = number
+      redis = number
+      any   = number
+    })
+    protocol = object({
+      tcp = string
+      any = string
+    })
+  })
 }
 
-variable "github_repo" {
-  description = "The name of the GitHub repository"
-  type        = string
+
+
+# ==========================
+# Load Balancer Configuration
+# ==========================
+variable "load_balancer" {
+  description = "ALB settings, listener, target group and health check"
+  type = object({
+    alb_settings = object({
+      internal                   = bool
+      enable_deletion_protection = bool
+      load_balancer_type         = string
+    })
+
+    lb_target_group = object({
+      port     = number
+      protocol = string
+    })
+
+    lb_health_check = object({
+      path                = string
+      interval            = number
+      timeout             = number
+      healthy_threshold   = number
+      unhealthy_threshold = number
+      matcher             = string
+    })
+
+    listener = object({
+      port = object({
+        http  = number
+        https = number
+      })
+      protocol = object({
+        http  = string
+        https = string
+      })
+      action_type = string
+    })
+  })
+}
+# ==========================
+# Launch Template Variable
+# ==========================
+variable "launch_template" {
+  description = "Launch template configuration for staging and production"
+  type = object({
+    staging = object({
+      architecture  = string
+      storage       = string
+      instance_type = string
+    })
+    production = object({
+      architecture  = string
+      storage       = string
+      instance_type = string
+    })
+  })
 }
 
-variable "creator_name" {
-  description = "The name of the creator"
-  type        = string
+# ==========================
+# Auto Scaling Configuration
+# ==========================
+variable "autoscaling" {
+  description = "Auto Scaling configuration for staging and production"
+  type = object({
+    staging = object({
+      desired_capacity          = number
+      max_size                  = number
+      min_size                  = number
+      health_check_type         = string
+      health_check_grace_period = number
+      version                   = string
+      propagate_at_launch       = bool
+    })
+    production = object({
+      desired_capacity          = number
+      max_size                  = number
+      min_size                  = number
+      health_check_type         = string
+      health_check_grace_period = number
+      version                   = string
+      propagate_at_launch       = bool
+    })
+  })
 }
 
-#----------------------staging----------------------#
-variable "instance_type" {
-  description = "EC2 instance type for the application server."
-  type        = string
+
+# ====================
+# Database Settings
+# ====================
+variable "database" {
+  description = "RDS instance settings for staging and production"
+  type = object({
+    staging = object({
+      engine                  = string
+      instance_class          = string
+      initial_storage         = number
+      username                = string
+      password                = string
+      delete_automated_backup = bool
+      iam_authentication      = bool
+      multi_az                = bool
+      backup_retention_period = number
+      backup_window           = string
+    })
+    production = object({
+      engine                  = string
+      instance_class          = string
+      initial_storage         = number
+      username                = string
+      password                = string
+      delete_automated_backup = bool
+      iam_authentication      = bool
+      multi_az                = bool
+      backup_retention_period = number
+      backup_window           = string
+    })
+  })
+  sensitive = true
 }
 
-variable "ami_id" {
-  description = "AMI to use for the EC2 instance (must support your OS)."
-  type        = string
+
+
+# ====================
+# Redis Configuration
+# ====================
+variable "redis" {
+  description = "ElastiCache Redis configuration for staging and production"
+  type = object({
+    staging = object({
+      node_type = string
+      redis_settings = object({
+        engine             = string
+        num_cache_clusters = number
+      })
+    })
+    production = object({
+      node_type = string
+      redis_settings = object({
+        engine             = string
+        num_cache_clusters = number
+      })
+    })
+  })
 }
 
-variable "db_instance_class" {
-  description = "RDS instance class."
-  type        = string
+variable "alarm" {
+  description = "CloudWatch alarm configuration"
+  type = object({
+    namespace = map(string)
+    metric    = map(string)
+    threshold = map(number)
+    dim       = map(string)
+    attr      = map(string)
+    common_settings = object({
+      comparison_operator = string
+      evaluation_periods  = number
+      period              = number
+      statistic           = string
+    })
+    alert_email = string
+  })
 }
 
-variable "db_storage" {
-  description = "Allocated storage for RDS (in GB)."
-  type        = number
+variable "logs" {
+  description = "CloudWatch log configuration for all services"
+  type = object({
+    retention_in_days = number
+    log_group_prefix  = map(string)
+    group_paths       = map(string)
+    filters = object({
+      pattern = object({
+        error  = string
+        status = string
+      })
+      transformation = object({
+        name      = map(string)
+        namespace = string
+        value     = string
+      })
+    })
+  })
 }
 
-variable "db_storage_type" {
-  description = "the type of storage for the RDS instance."
-  type        = string
-}
 
-variable "db_username" {
-  description = "Username for the RDS instance."
-  type        = string
-}
 
-variable "max_db_storage" {
-  description = "the maximum allocated storage for the RDS instance."
-  type        = number
-}
 
-variable "db_password" {
-  description = "Password for the RDS instance."
-  type        = string
-  sensitive   = true
-}
 
-variable "redis_node_type" {
-  description = "ElastiCache Redis node type."
-  type        = string
-  default     = "cache.t3.micro"
-}
 
-#----------------------NETWORK----------------------#
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC."
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
-variable "public_subnets" {
-  description = "List of CIDR blocks for public subnets."
-  type        = list(string)
-}
-
-variable "private_subnets" {
-  description = "List of CIDR blocks for private subnets."
-  type        = list(string)
-}
-
-variable "availability_zones" {
-  description = "List of AZs to use for the subnets."
-  type        = list(string)
-}
-
-#----------------------DATABASE----------------------#
-variable "db_engine" {
-  description = "Database engine for the RDS instance (e.g., mysql, postgres)."
-  type        = string
-  default     = "mysql"
-}
-
-#----------------------AUTOSCALING----------------------#
-variable "autoscaling_desired_capacity" {
-  description = "The desired capacity for the Auto Scaling Group"
-  type        = number
-  default     = 2
-}
-
-variable "autoscaling_max_size" {
-  description = "The maximum size of the Auto Scaling Group"
-  type        = number
-  default     = 4
-}
-
-variable "autoscaling_min_size" {
-  description = "The minimum size of the Auto Scaling Group"
-  type        = number
-  default     = 2
-}
-
-variable "autoscaling_health_check_type" {
-  description = "The health check type for the Auto Scaling Group (EC2 or ELB)"
-  type        = string
-  default     = "ELB"
-}
-
-variable "autoscaling_health_check_grace_period" {
-  description = "The grace period (in seconds) for health checks"
-  type        = number
-  default     = 300
-}
-
-#----------------------IAM----------------------#
-variable "iam_authentication" {
-  description = "Enable IAM authentication for RDS"
-  type        = bool
-}
-
-#----------------------REDIS----------------------#
-variable "redis_cache_clusters" {
-  description = "The number of cache clusters for Redis"
-  type        = number
-}
-
-#----------------------CLOUDWATCH----------------------#
-variable "group_paths" {
-  description = "Paths to the log groups to monitor"
-  type        = map(string)
-}
-
-variable "retention_in_days" {
-  description = "Number of days to retain logs"
-  type        = number
-}
-
-variable "alarm_namespace" {
-  description = "Namespace for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_metric" {
-  description = "Metrics for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_threshold" {
-  description = "Thresholds for CloudWatch alarms"
-  type        = map(any)
-}
-
-variable "alarm_dim" {
-  description = "Dimensions for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_attr" {
-  description = "Attributes for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_common_settings" {
-  description = "Common settings for CloudWatch alarms"
-  type        = map(any)
-}
-
-variable "alarm_alert_email" {
-  description = "Email address for CloudWatch alerts"
-  type        = string
-}

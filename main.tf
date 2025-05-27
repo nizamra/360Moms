@@ -1,84 +1,123 @@
 module "network" {
-  source             = "./modules/network"
-  name_prefix        = var.name_prefix
-  public_subnets     = var.public_subnets
-  private_subnets    = var.private_subnets
-  availability_zones = var.availability_zones
-  vpc_cidr           = var.vpc_cidr
+  source           = "./modules/network"
+  environment      = "network"
+  prefix           = local.name_prefix
+  project_settings = var.project_settings
+  network          = var.network
+  load_balancer    = var.load_balancer
+  security_groups  = var.security_groups
 }
 
-module "rds" {
-  source               = "./modules/rds"
-  name_prefix          = var.name_prefix
-  db_engine            = var.db_engine
-  db_instance_class    = var.db_instance_class
-  db_storage           = var.db_storage
-  db_storage_type      = var.db_storage_type
-  max_db_storage       = var.max_db_storage
-  db_username          = var.db_username
-  db_password          = var.db_password
-  private_subnet_ids   = module.network.private_subnet_ids
-  db_security_group_id = module.network.rds_security_group_id
-  db_subnet_group_name = module.network.rds_subnet_group_name
-  iam_authentication   = var.iam_authentication
-}
 
-module "redis" {
-  source                  = "./modules/redis"
-  name_prefix             = var.name_prefix
-  redis_node_type         = var.redis_node_type
-  redis_security_group_id = module.network.redis_security_group_id
+module "staging" {
+  source           = "./modules/environment"
+  environment      = "staging"
+  project_settings = var.project_settings
+  prefix           = local.name_prefix
+
+  policies_path   = local.policies
+  scripts_path    = local.scripts
+  security_groups = var.security_groups
+
+  launch_template       = var.launch_template.staging
+  ec2_security_group_id = module.network.ec2_security_group_id
+  autoscaling           = var.autoscaling.staging
+  target_group_arn      = module.network.target_group_arn
+
+  database              = var.database.staging
+  private_subnet_ids    = module.network.private_subnet_ids
+  db_security_group_ids = [module.network.db_security_group_id]
+  rds_subnet_group_name = module.network.rds_subnet_group_name
+
+  redis                   = var.redis.staging
   redis_subnet_group_name = module.network.redis_subnet_group_name
-  redis_cache_clusters    = var.redis_cache_clusters
+  redis_security_group_id = module.network.redis_security_group_id
+
+  depends_on = [
+    module.network,
+  ]
 }
 
-module "ec2" {
-  source                                = "./modules/ec2"
-  name_prefix                           = var.name_prefix
-  aws_region                            = var.aws_region
-  ami_id                                = var.ami_id
-  instance_type                         = var.instance_type
-  private_subnet_ids                    = module.network.private_subnet_ids
-  security_group_id                     = module.network.security_group_id
-  target_group_arn                      = module.network.target_group_arn
-  redis_endpoint                        = module.redis.redis_endpoint
-  db_endpoint                           = module.rds.db_endpoint
-  db_resource_id                        = module.rds.db_resource_id
-  db_username                           = var.db_username
-  db_password                           = var.db_password
-  autoscaling_desired_capacity          = var.autoscaling_desired_capacity
-  autoscaling_max_size                  = var.autoscaling_max_size
-  autoscaling_min_size                  = var.autoscaling_min_size
-  autoscaling_health_check_type         = var.autoscaling_health_check_type
-  autoscaling_health_check_grace_period = var.autoscaling_health_check_grace_period
-  depends_on                            = [module.network, module.rds, module.redis]
-}
+# module "production" {
+#   source           = "./modules/environment"
+#   environment      = "production"
+#   project_settings = var.project_settings
+#   prefix           = local.name_prefix
+
+#   policies_path   = local.policies
+#   scripts_path    = local.scripts
+#   security_groups = var.security_groups
+
+#   launch_template       = var.launch_template.production
+#   ec2_security_group_id = module.network.ec2_security_group_id
+#   autoscaling           = var.autoscaling.production
+#   target_group_arn      = module.network.target_group_arn
+
+#   database              = var.database.production
+#   private_subnet_ids    = module.network.private_subnet_ids
+#   db_security_group_ids = [module.network.db_security_group_id]
+
+#   rds_subnet_group_name = module.network.rds_subnet_group_name
+
+#   redis                   = var.redis.production
+#   redis_subnet_group_name = module.network.redis_subnet_group_name
+#   redis_security_group_id = module.network.redis_security_group_id
+
+#   depends_on = [
+#     module.network,
+#   ]
+# }
+
 
 module "cloudwatch" {
-  source            = "./modules/cloudwatch"
-  name_prefix       = var.name_prefix
-  aws_region        = var.aws_region
-  vpc_id            = module.network.vpc_id
-  ec2_instance_id   = module.ec2.ec2_instance_id
-  rds_identifier    = module.rds.db_identifier
-  redis_cluster_id  = module.redis.redis_cluster_id
-  alarm_alert_email = var.alarm_alert_email
+  source     = "./modules/cloudwatch"
+  aws_region = var.project_settings.aws_region
+  alarm      = var.alarm
+  logs       = var.logs
   env_configs = {
-    asg_name = module.ec2.autoscaling_group_name
-    rds_id   = module.rds.db_identifier
-    redis_id = module.redis.redis_cluster_id
+    staging = {
+      asg_name = module.staging.asg_name
+      rds_id   = module.staging.rds_id
+      redis_id = module.staging.redis_id
+    }
+    # production = {
+    #   asg_name = module.production.asg_name
+    #   rds_id   = module.production.rds_id
+    #   redis_id = module.production.redis_id
+    # }
   }
-  create_asg_alarms     = true
-  create_rds_alarms     = true
-  create_redis_alarms   = true
-  retention_in_days     = var.retention_in_days
-  group_paths           = var.group_paths
-  alarm_namespace       = var.alarm_namespace
-  alarm_metric          = var.alarm_metric
-  alarm_threshold       = var.alarm_threshold
-  alarm_dim             = var.alarm_dim
-  alarm_attr            = var.alarm_attr
-  alarm_common_settings = var.alarm_common_settings
+  vpc_id = module.network.vpc_id
 
-  depends_on = [module.network, module.ec2, module.rds, module.redis]
+  depends_on = [
+    module.network,
+    module.staging,
+    # module.production,
+  ]
 }
+
+
+module "connectivity_staging" {
+  source                 = "./modules/connectivity"
+  prefix                 = local.name_prefix
+  environment            = "staging"
+  aws_region             = var.project_settings.aws_region
+  logs                   = var.logs
+  rds_address            = module.staging.rds_address
+  redis_primary_endpoint = module.staging.redis_primary_endpoint
+  ec2_name_tag           = "${local.name_prefix}-staging-ec2"
+  db_user                = var.database.staging.username
+}
+
+# module "connectivity_production" {
+#   source                 = "./modules/connectivity"
+#   prefix                 = local.name_prefix
+#   environment            = "production"
+#   aws_region             = var.project_settings.aws_region
+#   logs                   = var.logs
+#   rds_address            = module.production.rds_address
+#   redis_primary_endpoint = module.production.redis_primary_endpoint
+#   ec2_name_tag           = "${local.name_prefix}-production-ec2"
+#   db_user                = var.database.production.username
+# }
+
+
