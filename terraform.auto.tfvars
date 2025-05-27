@@ -6,7 +6,6 @@ project_settings = {
   aws_region = "us-east-1"
 }
 
-
 # ======================
 # Network Configuration
 # ======================
@@ -21,7 +20,6 @@ network = {
   eip_domain               = "vpc"
   default_route_cidr_block = "0.0.0.0/0"
 }
-
 
 # ==========================
 # Load Balancer Configuration
@@ -77,7 +75,6 @@ security_groups = {
   }
 }
 
-
 # ==========================
 # Launch Template Configuration
 # 
@@ -97,6 +94,7 @@ security_groups = {
 #       - "t3.micro"/"t3a.micro": Burstable general purpose
 #       - "t4g.micro": ARM-based, lowest cost (Graviton)
 # ==========================
+
 launch_template = {
   staging = {
     architecture  = "x86_64"
@@ -110,7 +108,6 @@ launch_template = {
     instance_type = "t2.micro"
   }
 }
-
 
 # ==========================
 # Auto Scaling Configuration
@@ -137,7 +134,6 @@ autoscaling = {
   }
 }
 
-
 # ====================
 # Database Settings
 # ====================
@@ -151,10 +147,8 @@ database = {
     delete_automated_backup = true
     iam_authentication      = true
     multi_az                = true
-    backup_retention_period   = 0 # 0 means no backup
-    backup_window             = "22:00-23:00" # optional; format is HH:MM-HH:MM in UTC
- 
-
+    backup_retention_period = 0             # 0 means no backup
+    backup_window           = "22:00-23:00" # optional; format is HH:MM-HH:MM in UTC
   }
 
   production = {
@@ -166,12 +160,10 @@ database = {
     delete_automated_backup = true
     iam_authentication      = true
     multi_az                = true
-    backup_retention_period   = 7
-    backup_window             = "22:00-23:00" # optional; format is HH:MM-HH:MM in UTC
+    backup_retention_period = 7
+    backup_window           = "22:00-23:00" # optional; format is HH:MM-HH:MM in UTC
   }
 }
-
-
 
 # ====================
 # Redis Configuration
@@ -193,7 +185,6 @@ redis = {
     }
   }
 }
-
 
 # ====================
 # Alarm Configuration
@@ -254,7 +245,6 @@ alarm = {
   alert_email = "alerts@example.com"
 }
 
-
 logs = {
   retention_in_days = 7 # days
 
@@ -270,7 +260,6 @@ logs = {
     rds              = "/aws/rds/mysql-logs"
     redis            = "/aws/elasticache/redis-logs"
     ssm_connectivity = "/aws/ssm/connectivity"
-
   }
 
   filters = {
