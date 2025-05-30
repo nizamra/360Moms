@@ -9,23 +9,23 @@ resource "aws_sns_topic_subscription" "email" {
   endpoint  = var.alarm_alert_email
 }
 
-# Specific alarms for ASG
-resource "aws_cloudwatch_metric_alarm" "asg_alarm" {
-  count = var.create_asg_alarms ? 1 : 0
+# EC2 instance alarms
+resource "aws_cloudwatch_metric_alarm" "ec2_alarm" {
+  count = var.create_ec2_alarms ? 1 : 0
 
-  alarm_name          = "${var.name_prefix}-asg-cpu"
+  alarm_name          = "${var.name_prefix}-ec2-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   metric_name         = lookup(var.alarm_metric, "cpu", "CPUUtilization")
-  namespace           = lookup(var.alarm_namespace, "asg", "AWS/AutoScaling")
+  namespace           = lookup(var.alarm_namespace, "ec2", "AWS/EC2")
   period              = 300
-  statistic           = "Sum"
+  statistic           = "Average"
   threshold           = lookup(var.alarm_threshold, "cpu", 80)
-  alarm_description   = "Alarm for ASG CPU"
+  alarm_description   = "Alarm for EC2 CPU"
   alarm_actions       = [aws_sns_topic.mail_alerts.arn]
 
   dimensions = {
-    AutoScalingGroupName = var.env_configs.asg_name
+    InstanceId = var.ec2_instance_id
   }
 }
 
@@ -39,13 +39,13 @@ resource "aws_cloudwatch_metric_alarm" "rds_alarm" {
   metric_name         = lookup(var.alarm_metric, "cpu", "CPUUtilization")
   namespace           = lookup(var.alarm_namespace, "rds", "AWS/RDS")
   period              = 300
-  statistic           = "Sum"
+  statistic           = "Average"
   threshold           = lookup(var.alarm_threshold, "cpu", 80)
   alarm_description   = "Alarm for RDS CPU"
   alarm_actions       = [aws_sns_topic.mail_alerts.arn]
 
   dimensions = {
-    DBInstanceIdentifier = var.env_configs.rds_id
+    DBInstanceIdentifier = var.rds_identifier
   }
 }
 
@@ -59,13 +59,13 @@ resource "aws_cloudwatch_metric_alarm" "redis_alarm" {
   metric_name         = lookup(var.alarm_metric, "cpu", "CPUUtilization")
   namespace           = lookup(var.alarm_namespace, "redis", "AWS/ElastiCache")
   period              = 300
-  statistic           = "Sum"
+  statistic           = "Average"
   threshold           = lookup(var.alarm_threshold, "cpu", 80)
   alarm_description   = "Alarm for Redis CPU"
   alarm_actions       = [aws_sns_topic.mail_alerts.arn]
 
   dimensions = {
-    CacheClusterId = var.env_configs.redis_id
+    CacheClusterId = var.redis_cluster_id
   }
 }
 
@@ -79,7 +79,7 @@ resource "aws_cloudwatch_metric_alarm" "log_metric_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   period              = 300
-  statistic           = "Sum"
+  statistic           = "Average"
   threshold           = each.value.threshold
 
   alarm_description = "Triggered when ${each.value.metric_name} exceeds threshold"

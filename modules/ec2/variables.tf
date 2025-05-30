@@ -59,28 +59,3 @@ variable "target_group_arn" {
   description = "The ARN of the target group"
   type        = string
 }
-
-variable "autoscaling_desired_capacity" {
-  description = "The desired capacity for the Auto Scaling Group"
-  type        = number
-}
-
-variable "autoscaling_max_size" {
-  description = "The maximum size of the Auto Scaling Group"
-  type        = number
-}
-
-variable "autoscaling_min_size" {
-  description = "The minimum size of the Auto Scaling Group"
-  type        = number
-}
-
-variable "autoscaling_health_check_type" {
-  description = "The health check type for the Auto Scaling Group (EC2 or ELB)"
-  type        = string
-}
-
-variable "autoscaling_health_check_grace_period" {
-  description = "The grace period (in seconds) for health checks"
-  type        = number
-}

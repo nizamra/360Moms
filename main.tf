@@ -1,9 +1,9 @@
 locals {
-  instance_type        = terraform.workspace == "production" ? var.prod_instance_type : var.stage_instance_type
-  db_storage           = terraform.workspace == "production" ? var.prod_db_storage : var.stage_db_storage
-  max_db_storage       = terraform.workspace == "production" ? var.prod_max_db_storage : var.stage_max_db_storage
-  db_username          = terraform.workspace == "production" ? var.prod_db_username : var.stage_db_username
-  iam_authentication   = terraform.workspace == "production" ? var.prod_iam_authentication : var.stage_iam_authentication
+  instance_type      = terraform.workspace == "production" ? var.prod_instance_type : var.stage_instance_type
+  db_storage         = terraform.workspace == "production" ? var.prod_db_storage : var.stage_db_storage
+  max_db_storage     = terraform.workspace == "production" ? var.prod_max_db_storage : var.stage_max_db_storage
+  db_username        = terraform.workspace == "production" ? var.prod_db_username : var.stage_db_username
+  iam_authentication = terraform.workspace == "production" ? var.prod_iam_authentication : var.stage_iam_authentication
 }
 
 module "network" {
@@ -40,42 +40,31 @@ module "redis" {
 }
 
 module "ec2" {
-  source                                = "./modules/ec2"
-  name_prefix                           = terraform.workspace
-  aws_region                            = var.aws_region
-  ami_id                                = var.ami_id
-  instance_type                         = local.instance_type
-  private_subnet_ids                    = module.network.private_subnet_ids
-  security_group_id                     = module.network.security_group_id
-  target_group_arn                      = module.network.target_group_arn
-  redis_endpoint                        = module.redis.redis_endpoint
-  db_endpoint                           = module.rds.db_endpoint
-  db_resource_id                        = module.rds.db_resource_id
-  db_username                           = local.db_username
-  db_password                           = var.db_password
-  autoscaling_desired_capacity          = var.autoscaling_desired_capacity
-  autoscaling_max_size                  = var.autoscaling_max_size
-  autoscaling_min_size                  = var.autoscaling_min_size
-  autoscaling_health_check_type         = var.autoscaling_health_check_type
-  autoscaling_health_check_grace_period = var.autoscaling_health_check_grace_period
-  depends_on                            = [module.network, module.rds, module.redis]
+  source             = "./modules/ec2"
+  name_prefix        = terraform.workspace
+  aws_region         = var.aws_region
+  ami_id             = var.ami_id
+  instance_type      = local.instance_type
+  private_subnet_ids = module.network.private_subnet_ids
+  security_group_id  = module.network.security_group_id
+  target_group_arn   = module.network.target_group_arn
+  redis_endpoint     = module.redis.redis_endpoint
+  db_endpoint        = module.rds.db_endpoint
+  db_resource_id     = module.rds.db_resource_id
+  db_username        = local.db_username
+  db_password        = var.db_password
+  depends_on         = [module.network, module.rds, module.redis]
 }
 
 module "cloudwatch" {
-  source            = "./modules/cloudwatch"
-  name_prefix       = terraform.workspace
-  aws_region        = var.aws_region
-  vpc_id            = module.network.vpc_id
-  ec2_instance_id   = module.ec2.ec2_instance_id
-  rds_identifier    = module.rds.db_identifier
-  redis_cluster_id  = module.redis.redis_cluster_id
-  alarm_alert_email = var.alarm_alert_email
-  env_configs = {
-    asg_name = module.ec2.autoscaling_group_name
-    rds_id   = module.rds.db_identifier
-    redis_id = module.redis.redis_cluster_id
-  }
-  create_asg_alarms     = true
+  source                = "./modules/cloudwatch"
+  name_prefix           = terraform.workspace
+  aws_region            = var.aws_region
+  vpc_id                = module.network.vpc_id
+  ec2_instance_id       = module.ec2.ec2_instance_id
+  rds_identifier        = module.rds.db_identifier
+  redis_cluster_id      = module.redis.redis_cluster_id
+  alarm_alert_email     = var.alarm_alert_email
   create_rds_alarms     = true
   create_redis_alarms   = true
   retention_in_days     = var.retention_in_days

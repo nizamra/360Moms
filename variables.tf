@@ -74,33 +74,6 @@ variable "db_engine" {
   type        = string
 }
 
-#----------------------AUTOSCALING----------------------#
-variable "autoscaling_desired_capacity" {
-  description = "The desired capacity for the Auto Scaling Group"
-  type        = number
-}
-
-variable "autoscaling_max_size" {
-  description = "The maximum size of the Auto Scaling Group"
-  type        = number
-  default     = 4
-}
-
-variable "autoscaling_min_size" {
-  description = "The minimum size of the Auto Scaling Group"
-  type        = number
-}
-
-variable "autoscaling_health_check_type" {
-  description = "The health check type for the Auto Scaling Group (EC2 or ELB)"
-  type        = string
-}
-
-variable "autoscaling_health_check_grace_period" {
-  description = "The grace period (in seconds) for health checks"
-  type        = number
-}
-
 #----------------------CLOUDWATCH----------------------#
 variable "group_paths" {
   description = "Paths to the log groups to monitor"

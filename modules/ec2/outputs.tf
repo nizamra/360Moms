@@ -1,14 +1,4 @@
 # outputs.tf (updated)
-output "launch_template_id" {
-  value       = aws_launch_template.app.id
-  description = "The ID of the Launch Template"
-}
-
-output "autoscaling_group_name" {
-  value       = aws_autoscaling_group.app.name
-  description = "The name of the Auto Scaling Group"
-}
-
 output "ec2_instance_id" {
   value       = aws_instance.ec2.id
   description = "The ID of the EC2 instance"

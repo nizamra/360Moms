@@ -1,17 +1,17 @@
 locals {
   metric_widgets = [
-    # ASG metrics
+    # EC2 metrics
     {
       x         = 0
       y         = 0
       width     = 12
       height    = 6
       type      = "metric"
-      namespace = lookup(var.alarm_namespace, "asg", "AWS/AutoScaling")
+      namespace = lookup(var.alarm_namespace, "ec2", "AWS/EC2")
       metric    = lookup(var.alarm_metric, "cpu", "CPUUtilization")
-      dim       = lookup(var.alarm_dim, "asg", "AutoScalingGroupName")
-      id        = var.env_configs.asg_name
-      title     = "ASG CPU Utilization"
+      dim       = "InstanceId"
+      id        = var.ec2_instance_id
+      title     = "EC2 CPU Utilization"
       region    = var.aws_region
     },
     # RDS metrics
@@ -23,8 +23,8 @@ locals {
       type      = "metric"
       namespace = lookup(var.alarm_namespace, "rds", "AWS/RDS")
       metric    = lookup(var.alarm_metric, "cpu", "CPUUtilization")
-      dim       = lookup(var.alarm_dim, "rds", "DBInstanceIdentifier")
-      id        = var.env_configs.rds_id
+      dim       = "DBInstanceIdentifier"
+      id        = var.rds_identifier
       title     = "RDS CPU Utilization"
       region    = var.aws_region
     },
@@ -37,8 +37,8 @@ locals {
       type      = "metric"
       namespace = lookup(var.alarm_namespace, "redis", "AWS/ElastiCache")
       metric    = lookup(var.alarm_metric, "cpu", "CPUUtilization")
-      dim       = lookup(var.alarm_dim, "redis", "CacheClusterId")
-      id        = var.env_configs.redis_id
+      dim       = "CacheClusterId"
+      id        = var.redis_cluster_id
       title     = "Redis CPU Utilization"
       region    = var.aws_region
     }

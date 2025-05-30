@@ -27,13 +27,6 @@ prod_db_username     = "admin"
 redis_node_type      = "cache.t3.micro"
 db_engine            = "mysql"
 
-#----------------------AUTOSCALING----------------------#
-autoscaling_desired_capacity          = 2
-autoscaling_max_size                  = 4
-autoscaling_min_size                  = 2
-autoscaling_health_check_type         = "ELB"
-autoscaling_health_check_grace_period = 300
-
 #----------------------IAM----------------------#
 stage_iam_authentication = "true"
 prod_iam_authentication  = "false"
@@ -77,12 +70,12 @@ alarm_threshold = {
   app_error = 1 # count
 }
 alarm_dim = {
-  ec2   = "AutoScalingGroupName"
+  ec2   = "InstanceId"
   rds   = "DBInstanceIdentifier"
   redis = "CacheClusterId"
 }
 alarm_attr = {
-  ec2   = "asg_name"
+  ec2   = "instance_id"
   rds   = "rds_id"
   redis = "redis_id"
 }
@@ -90,6 +83,6 @@ alarm_common_settings = {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1   # number of periods
   period              = 300 # seconds
-  statistic           = "Sum"
+  statistic           = "Average"
 }
 alarm_alert_email = "alerts@example.com"

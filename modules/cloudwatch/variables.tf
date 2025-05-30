@@ -19,26 +19,27 @@ variable "name_prefix" {
   type        = string
 }
 
-#----------------------staging----------------------#
+#----------------------RESOURCES----------------------#
 variable "ec2_instance_id" {
-  description = "EC2 instance type for the application server."
+  description = "ID of the EC2 instance to monitor"
   type        = string
 }
 
 variable "rds_identifier" {
-  description = "RDS instance class."
+  description = "RDS instance identifier"
   type        = string
 }
 
 variable "redis_cluster_id" {
-  description = "ElastiCache Redis cluster id."
+  description = "ElastiCache Redis cluster id"
   type        = string
 }
 
 #----------------------ALARM FLAGS----------------------#
-variable "create_asg_alarms" {
-  description = "Whether to create Auto Scaling Group alarms"
+variable "create_ec2_alarms" {
+  description = "Whether to create EC2 instance alarms"
   type        = bool
+  default     = true
 }
 
 variable "create_rds_alarms" {
@@ -60,14 +61,6 @@ variable "group_paths" {
 variable "retention_in_days" {
   description = "Number of days to retain logs"
   type        = number
-}
-
-variable "env_configs" {
-  type = object({
-    asg_name = string
-    rds_id   = string
-    redis_id = string
-  })
 }
 
 variable "alarm_namespace" {

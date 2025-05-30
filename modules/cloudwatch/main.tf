@@ -33,10 +33,25 @@ locals {
 
   # Build specs for the log‑metric alarms
   log_alarm_specs = {
-    for group_name, path in var.group_paths : group_name => {
-      alarm_name  = "${var.name_prefix}-${group_name}-error-alarm"
-      metric_name = "${var.name_prefix}-${group_name}-error-metric"
-      threshold   = 1
+    nginx_5xx = {
+      alarm_name  = "${var.name_prefix}-nginx-5xx"
+      metric_name = lookup(var.alarm_metric, "nginx_5xx", "Nginx5xxErrorCount")
+      threshold   = lookup(var.alarm_threshold, "nginx_5xx", 1)
+    }
+    rds_error = {
+      alarm_name  = "${var.name_prefix}-rds-error"
+      metric_name = lookup(var.alarm_metric, "rds_error", "RDSErrorCount")
+      threshold   = lookup(var.alarm_threshold, "rds_error", 1)
+    }
+    redis_err = {
+      alarm_name  = "${var.name_prefix}-redis-error"
+      metric_name = lookup(var.alarm_metric, "redis_err", "RedisErrorCount")
+      threshold   = lookup(var.alarm_threshold, "redis_err", 1)
+    }
+    app_error = {
+      alarm_name  = "${var.name_prefix}-app-error"
+      metric_name = lookup(var.alarm_metric, "app_error", "ApplicationErrorCount")
+      threshold   = lookup(var.alarm_threshold, "app_error", 1)
     }
   }
 }
