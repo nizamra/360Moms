@@ -54,8 +54,3 @@ variable "db_resource_id" {
   description = "Database resource ID"
   type        = string
 }
-
-variable "target_group_arn" {
-  description = "The ARN of the target group"
-  type        = string
-}

@@ -169,3 +169,8 @@ variable "prod_iam_authentication" {
   description = "IAM authentication for production environment"
   type        = string
 }
+
+variable "num_cache_nodes" {
+  description = "Number of cache nodes in the cluster"
+  type        = number
+}

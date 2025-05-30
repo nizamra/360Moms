@@ -11,7 +11,7 @@ private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
 availability_zones = ["me-south-1a", "me-south-1b"]
 
 #----------------------EC2----------------------#
-stage_instance_type = "t2.micro"
+stage_instance_type = "t3.micro"
 prod_instance_type  = "t3.micro"
 ami_id              = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
 
@@ -26,6 +26,7 @@ stage_db_username    = "user"
 prod_db_username     = "admin"
 redis_node_type      = "cache.t3.micro"
 db_engine            = "mysql"
+num_cache_nodes      = 1
 
 #----------------------IAM----------------------#
 stage_iam_authentication = "true"

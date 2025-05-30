@@ -35,12 +35,3 @@ output "redis_subnet_group_name" {
   value       = aws_elasticache_subnet_group.redis.name
   description = "The name of the Redis subnet group"
 }
-
-output "target_group_arn" {
-  value = aws_lb_target_group.app_tg.arn  
-}
-
-output "alb_arn" {
-  value = aws_lb.app_lb.arn
-}
-

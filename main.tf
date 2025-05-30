@@ -37,6 +37,7 @@ module "redis" {
   redis_node_type         = var.redis_node_type
   redis_security_group_id = module.network.redis_security_group_id
   redis_subnet_group_name = module.network.redis_subnet_group_name
+  num_cache_nodes         = var.num_cache_nodes
 }
 
 module "ec2" {
@@ -47,7 +48,6 @@ module "ec2" {
   instance_type      = local.instance_type
   private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
-  target_group_arn   = module.network.target_group_arn
   redis_endpoint     = module.redis.redis_endpoint
   db_endpoint        = module.rds.db_endpoint
   db_resource_id     = module.rds.db_resource_id
@@ -63,7 +63,7 @@ module "cloudwatch" {
   vpc_id                = module.network.vpc_id
   ec2_instance_id       = module.ec2.ec2_instance_id
   rds_identifier        = module.rds.db_identifier
-  redis_cluster_id      = module.redis.redis_cluster_id
+  redis_cluster_id      = module.redis.redis_id
   alarm_alert_email     = var.alarm_alert_email
   create_rds_alarms     = true
   create_redis_alarms   = true
