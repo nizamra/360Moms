@@ -1,6 +1,6 @@
 module "network" {
   source             = "./modules/network"
-  name_prefix        = var.name_prefix
+  name_prefix        = terraform.workspace
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
   availability_zones = var.availability_zones
@@ -9,7 +9,7 @@ module "network" {
 
 module "rds" {
   source               = "./modules/rds"
-  name_prefix          = var.name_prefix
+  name_prefix          = terraform.workspace
   db_engine            = var.db_engine
   db_instance_class    = var.db_instance_class
   db_storage           = var.db_storage
@@ -25,7 +25,7 @@ module "rds" {
 
 module "redis" {
   source                  = "./modules/redis"
-  name_prefix             = var.name_prefix
+  name_prefix             = terraform.workspace
   redis_node_type         = var.redis_node_type
   redis_security_group_id = module.network.redis_security_group_id
   redis_subnet_group_name = module.network.redis_subnet_group_name
@@ -34,7 +34,7 @@ module "redis" {
 
 module "ec2" {
   source                                = "./modules/ec2"
-  name_prefix                           = var.name_prefix
+  name_prefix                           = terraform.workspace
   aws_region                            = var.aws_region
   ami_id                                = var.ami_id
   instance_type                         = var.instance_type
@@ -56,7 +56,7 @@ module "ec2" {
 
 module "cloudwatch" {
   source            = "./modules/cloudwatch"
-  name_prefix       = var.name_prefix
+  name_prefix       = terraform.workspace
   aws_region        = var.aws_region
   vpc_id            = module.network.vpc_id
   ec2_instance_id   = module.ec2.ec2_instance_id

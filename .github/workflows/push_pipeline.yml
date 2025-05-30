@@ -1,8 +1,9 @@
 name: Push Terraform Workspaces to AWS
 
 on:
-  push:
-    branches: [staging, main]
+  workflow_call:
+  # push:
+  #   branches: [staging, main]
 
 jobs:
   terraform:
@@ -34,8 +35,8 @@ jobs:
         run: |
           if [[ $GITHUB_REF == "refs/heads/staging" ]]; then
             terraform workspace select staging
-            terraform apply -auto-approve -var-file=environments/staging/values.tfvars
+            terraform apply -auto-approve
           elif [[ $GITHUB_REF == "refs/heads/production" ]]; then
             terraform workspace select production
-            terraform apply -auto-approve -var-file=environments/production/values.tfvars
+            terraform apply -auto-approve
           fi

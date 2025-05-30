@@ -5,15 +5,6 @@ variable "aws_region" {
   default     = "me-south-1"
 }
 
-variable "name_prefix" {
-  description = "Deployment name_prefix (staging, production)"
-  type        = string
-  validation {
-    condition     = contains(["staging", "production"], var.name_prefix)
-    error_message = "Invalid name_prefix. Valid values: staging, production"
-  }
-}
-
 variable "project_name" {
   description = "The name of the project"
   type        = string

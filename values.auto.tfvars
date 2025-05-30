@@ -1,7 +1,6 @@
 #----------------------GENERAL----------------------#
 aws_region   = "me-south-1"
-name_prefix  = "staging"
-project_name = "test-project"
+project_name = "threesixtymom-project"
 github_repo  = "https://github.com/"
 creator_name = "360MomsIT"
 
@@ -12,15 +11,16 @@ private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
 availability_zones = ["me-south-1a", "me-south-1b"]
 
 #----------------------EC2----------------------#
-instance_type = "t3.micro"
+instance_type = terraform.workspace == "production" ? "t3.micro":"t2.micro"
 ami_id        = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
 
 #----------------------DATABASE----------------------#
 db_instance_class = "db.t3.micro"
-db_storage        = 20
+db_storage        = terraform.workspace == "production" ? "50":"20"
+
 db_storage_type   = "gp3"
-max_db_storage    = 60
-db_username       = "user"
+max_db_storage    = terraform.workspace == "production" ? "200":"60"
+db_username       = terraform.workspace == "production" ? "admin":"user"
 redis_node_type   = "cache.t3.micro"
 db_engine         = "mysql"
 
@@ -32,10 +32,10 @@ autoscaling_health_check_type         = "ELB"
 autoscaling_health_check_grace_period = 300
 
 #----------------------IAM----------------------#
-iam_authentication = true # TODO: Change to false in production
+iam_authentication = terraform.workspace == "production" ? "false":"true"
 
 #----------------------REDIS----------------------#
-redis_cache_clusters = 1 # TODO: Change to 2 in production
+redis_cache_clusters = terraform.workspace == "production" ? "2":"1"
 
 #----------------------CLOUDWATCH----------------------#
 group_paths = {
