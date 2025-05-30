@@ -5,8 +5,6 @@ on:
     types:
       - opened
       - synchronize
-    branches:
-      - staging
 
 permissions:
   id-token: write
@@ -44,15 +42,6 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Select or Create Workspace
-        run: |
-          WS="${{ github.event.inputs.workspace }}"
-          if ! terraform workspace list | grep -qw "$WS"; then
-            terraform workspace new "$WS"
-          else
-            terraform workspace select "$WS"
-          fi
 
       - name: Terraform Format Check
         run: terraform fmt -check
