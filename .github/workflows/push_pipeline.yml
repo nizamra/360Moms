@@ -1,4 +1,4 @@
-name: Terraform
+name: Push Terraform Workspaces to AWS
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: me-south-1
           role-session-name: GitHubActions-${{ github.run_id }}
           role-duration-seconds: 3600
 
