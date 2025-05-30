@@ -1,5 +1,5 @@
 #----------------------GENERAL----------------------#
-aws_region   = "me-south-1"
+aws_region   = " eu-central-1"
 name_prefix  = "production"
 project_name = "test-project"
 github_repo  = "https://github.com/"
@@ -9,7 +9,7 @@ creator_name = "360MomsIT"
 vpc_cidr           = "10.0.0.0/16"
 public_subnets     = ["10.0.1.0/24", "10.0.2.0/24"]
 private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
-availability_zones = ["me-south-1a", "me-south-1b"]
+availability_zones = slice(data.aws_availability_zones.available.names, 0, 2)
 
 #----------------------EC2----------------------#
 instance_type = "t3.micro"

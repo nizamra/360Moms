@@ -1,15 +1,15 @@
 #----------------------GENERAL----------------------#
-aws_region   = "me-south-1"
+aws_region   = " eu-central-2"
 name_prefix  = "staging"
-project_name = "test-project"
+project_name = "360-moms"
 github_repo  = "https://github.com/"
-creator_name = "360MomsIT"
+creator_name = "Nizam"
 
 #----------------------NETWORK----------------------#
 vpc_cidr           = "10.0.0.0/16"
 public_subnets     = ["10.0.1.0/24", "10.0.2.0/24"]
 private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
-availability_zones = ["me-south-1a", "me-south-1b"]
+availability_zones = slice(data.aws_availability_zones.available.names, 0, 2)
 
 #----------------------EC2----------------------#
 instance_type = "t3.micro"
@@ -91,4 +91,4 @@ alarm_common_settings = {
   period              = 300 # seconds
   statistic           = "Sum"
 }
-alarm_alert_email = "alerts@example.com"
+alarm_alert_email = "amin@360moms.net"

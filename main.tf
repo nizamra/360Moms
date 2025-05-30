@@ -82,3 +82,8 @@ module "cloudwatch" {
 
   depends_on = [module.network, module.ec2, module.rds, module.redis]
 }
+
+# Declare the data source
+data "aws_availability_zones" "available" {
+  state = "available"
+}

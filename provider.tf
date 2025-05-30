@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.11.2"
+  required_version = ">= 1.11.2"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -8,9 +8,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "threesixtymom-terraform-state"
+    bucket       = "terraform-state-360moms"
     key          = "tfstate/ThreeSixtyMom.tfstate"
-    region       = "me-south-1"
+    region       = "eu-central-1"
     use_lockfile = true
     encrypt      = true
   }
