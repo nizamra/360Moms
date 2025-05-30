@@ -1,3 +1,12 @@
+locals {
+  instance_type        = terraform.workspace == "production" ? var.prod_instance_type : var.stage_instance_type
+  db_storage           = terraform.workspace == "production" ? var.prod_db_storage : var.stage_db_storage
+  max_db_storage       = terraform.workspace == "production" ? var.prod_max_db_storage : var.stage_max_db_storage
+  db_username          = terraform.workspace == "production" ? var.prod_db_username : var.stage_db_username
+  iam_authentication   = terraform.workspace == "production" ? var.prod_iam_authentication : var.stage_iam_authentication
+  redis_cache_clusters = terraform.workspace == "production" ? var.prod_redis_cache_clusters : var.stage_redis_cache_clusters
+}
+
 module "network" {
   source             = "./modules/network"
   name_prefix        = terraform.workspace
@@ -12,15 +21,15 @@ module "rds" {
   name_prefix          = terraform.workspace
   db_engine            = var.db_engine
   db_instance_class    = var.db_instance_class
-  db_storage           = var.db_storage
+  db_storage           = local.db_storage
   db_storage_type      = var.db_storage_type
-  max_db_storage       = var.max_db_storage
-  db_username          = var.db_username
+  max_db_storage       = local.max_db_storage
+  db_username          = local.db_username
   db_password          = var.db_password
   private_subnet_ids   = module.network.private_subnet_ids
   db_security_group_id = module.network.rds_security_group_id
   db_subnet_group_name = module.network.rds_subnet_group_name
-  iam_authentication   = var.iam_authentication
+  iam_authentication   = local.iam_authentication
 }
 
 module "redis" {
@@ -29,7 +38,7 @@ module "redis" {
   redis_node_type         = var.redis_node_type
   redis_security_group_id = module.network.redis_security_group_id
   redis_subnet_group_name = module.network.redis_subnet_group_name
-  redis_cache_clusters    = var.redis_cache_clusters
+  redis_cache_clusters    = local.redis_cache_clusters
 }
 
 module "ec2" {
@@ -37,14 +46,14 @@ module "ec2" {
   name_prefix                           = terraform.workspace
   aws_region                            = var.aws_region
   ami_id                                = var.ami_id
-  instance_type                         = var.instance_type
+  instance_type                         = local.instance_type
   private_subnet_ids                    = module.network.private_subnet_ids
   security_group_id                     = module.network.security_group_id
   target_group_arn                      = module.network.target_group_arn
   redis_endpoint                        = module.redis.redis_endpoint
   db_endpoint                           = module.rds.db_endpoint
   db_resource_id                        = module.rds.db_resource_id
-  db_username                           = var.db_username
+  db_username                           = local.db_username
   db_password                           = var.db_password
   autoscaling_desired_capacity          = var.autoscaling_desired_capacity
   autoscaling_max_size                  = var.autoscaling_max_size

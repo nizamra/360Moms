@@ -21,11 +21,6 @@ variable "creator_name" {
 }
 
 #----------------------staging----------------------#
-variable "instance_type" {
-  description = "EC2 instance type for the application server."
-  type        = string
-}
-
 variable "ami_id" {
   description = "AMI to use for the EC2 instance (must support your OS)."
   type        = string
@@ -36,24 +31,9 @@ variable "db_instance_class" {
   type        = string
 }
 
-variable "db_storage" {
-  description = "Allocated storage for RDS (in GB)."
-  type        = number
-}
-
 variable "db_storage_type" {
   description = "the type of storage for the RDS instance."
   type        = string
-}
-
-variable "db_username" {
-  description = "Username for the RDS instance."
-  type        = string
-}
-
-variable "max_db_storage" {
-  description = "the maximum allocated storage for the RDS instance."
-  type        = number
 }
 
 variable "db_password" {
@@ -121,18 +101,6 @@ variable "autoscaling_health_check_grace_period" {
   type        = number
 }
 
-#----------------------IAM----------------------#
-variable "iam_authentication" {
-  description = "Enable IAM authentication for RDS"
-  type        = bool
-}
-
-#----------------------REDIS----------------------#
-variable "redis_cache_clusters" {
-  description = "The number of cache clusters for Redis"
-  type        = number
-}
-
 #----------------------CLOUDWATCH----------------------#
 variable "group_paths" {
   description = "Paths to the log groups to monitor"
@@ -176,5 +144,65 @@ variable "alarm_common_settings" {
 
 variable "alarm_alert_email" {
   description = "Email address for CloudWatch alerts"
+  type        = string
+}
+
+variable "stage_instance_type" {
+  description = "EC2 instance type for staging environment"
+  type        = string
+}
+
+variable "prod_instance_type" {
+  description = "EC2 instance type for production environment"
+  type        = string
+}
+
+variable "stage_db_storage" {
+  description = "Database storage for staging environment"
+  type        = string
+}
+
+variable "prod_db_storage" {
+  description = "Database storage for production environment"
+  type        = string
+}
+
+variable "stage_max_db_storage" {
+  description = "Maximum database storage for staging environment"
+  type        = string
+}
+
+variable "prod_max_db_storage" {
+  description = "Maximum database storage for production environment"
+  type        = string
+}
+
+variable "stage_db_username" {
+  description = "Database username for staging environment"
+  type        = string
+}
+
+variable "prod_db_username" {
+  description = "Database username for production environment"
+  type        = string
+}
+
+variable "stage_iam_authentication" {
+  description = "IAM authentication for staging environment"
+  type        = string
+}
+
+variable "prod_iam_authentication" {
+  description = "IAM authentication for production environment"
+  type        = string
+}
+
+variable "stage_redis_cache_clusters" {
+  description = "Number of Redis cache clusters for staging environment"
+  type        = string
+}
+
+variable "prod_redis_cache_clusters" {
+  description = "Number of Redis cache clusters for production environment"
   type        = string
 }

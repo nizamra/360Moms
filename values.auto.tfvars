@@ -11,18 +11,21 @@ private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
 availability_zones = ["me-south-1a", "me-south-1b"]
 
 #----------------------EC2----------------------#
-instance_type = terraform.workspace == "production" ? "t3.micro":"t2.micro"
-ami_id        = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
+stage_instance_type = "t2.micro"
+prod_instance_type  = "t3.micro"
+ami_id              = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
 
 #----------------------DATABASE----------------------#
-db_instance_class = "db.t3.micro"
-db_storage        = terraform.workspace == "production" ? "50":"20"
-
-db_storage_type   = "gp3"
-max_db_storage    = terraform.workspace == "production" ? "200":"60"
-db_username       = terraform.workspace == "production" ? "admin":"user"
-redis_node_type   = "cache.t3.micro"
-db_engine         = "mysql"
+db_instance_class    = "db.t3.micro"
+stage_db_storage     = "20"
+prod_db_storage      = "50"
+db_storage_type      = "gp3"
+stage_max_db_storage = "60"
+prod_max_db_storage  = "200"
+stage_db_username    = "user"
+prod_db_username     = "admin"
+redis_node_type      = "cache.t3.micro"
+db_engine            = "mysql"
 
 #----------------------AUTOSCALING----------------------#
 autoscaling_desired_capacity          = 2
@@ -32,10 +35,12 @@ autoscaling_health_check_type         = "ELB"
 autoscaling_health_check_grace_period = 300
 
 #----------------------IAM----------------------#
-iam_authentication = terraform.workspace == "production" ? "false":"true"
+stage_iam_authentication = "true"
+prod_iam_authentication  = "false"
 
 #----------------------REDIS----------------------#
-redis_cache_clusters = terraform.workspace == "production" ? "2":"1"
+stage_redis_cache_clusters = "1"
+prod_redis_cache_clusters  = "2"
 
 #----------------------CLOUDWATCH----------------------#
 group_paths = {
