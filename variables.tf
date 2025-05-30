@@ -74,14 +74,12 @@ variable "db_password" {
 variable "redis_node_type" {
   description = "ElastiCache Redis node type."
   type        = string
-  default     = "cache.t3.micro"
 }
 
 #----------------------NETWORK----------------------#
 variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
-  default     = "10.0.0.0/16"
 }
 
 variable "public_subnets" {
@@ -103,14 +101,12 @@ variable "availability_zones" {
 variable "db_engine" {
   description = "Database engine for the RDS instance (e.g., mysql, postgres)."
   type        = string
-  default     = "mysql"
 }
 
 #----------------------AUTOSCALING----------------------#
 variable "autoscaling_desired_capacity" {
   description = "The desired capacity for the Auto Scaling Group"
   type        = number
-  default     = 2
 }
 
 variable "autoscaling_max_size" {
@@ -122,19 +118,16 @@ variable "autoscaling_max_size" {
 variable "autoscaling_min_size" {
   description = "The minimum size of the Auto Scaling Group"
   type        = number
-  default     = 2
 }
 
 variable "autoscaling_health_check_type" {
   description = "The health check type for the Auto Scaling Group (EC2 or ELB)"
   type        = string
-  default     = "ELB"
 }
 
 variable "autoscaling_health_check_grace_period" {
   description = "The grace period (in seconds) for health checks"
   type        = number
-  default     = 300
 }
 
 #----------------------IAM----------------------#
