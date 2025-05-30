@@ -2,6 +2,20 @@
 
 This repository contains the infrastructure code for the 360Moms project, built using Terraform. The infrastructure is designed to support both staging and production environments on AWS.
 
+## Environment Management
+
+The infrastructure is managed using both Git branches and Terraform workspaces:
+
+- **Staging Environment**:
+  - Git Branch: `staging`
+  - Terraform Workspace: `staging`
+  - Configuration: `staging.tfvars`
+
+- **Production Environment**:
+  - Git Branch: `production`
+  - Terraform Workspace: `production`
+  - Configuration: `production.tfvars`
+
 ## Project Structure
 
 ```
@@ -9,8 +23,9 @@ This repository contains the infrastructure code for the 360Moms project, built 
 ├── main.tf                 # Main Terraform configuration
 ├── variables.tf            # Variable definitions
 ├── provider.tf             # Provider configuration
-├── values.auto.tfvars      # Auto-generated variable values
-├── terraform.tfvars        # Custom variable values
+├── staging.tfvars         # Staging environment variables
+├── production.tfvars      # Production environment variables
+├── Makefile              # Automation for deployment workflows
 └── modules/
     ├── network/            # Network module
     │   ├── variables.tf    # Network variables
@@ -79,14 +94,25 @@ The infrastructure includes the following components:
    cd 360Moms
    ```
 
-2. Initialize Terraform:
+2. Choose your target environment:
+   
+   For staging:
    ```bash
-   terraform init
+   make checkout-staging
+   ```
+   
+   For production:
+   ```bash
+   make checkout-production
    ```
 
-3. Configure your variables in `terraform.tfvars`:
+3. Initialize Terraform:
+   ```bash
+   make init
+   ```
+
+4. Configure your environment-specific variables in either `staging.tfvars` or `production.tfvars`:
    ```hcl
-   environment = "staging"
    aws_region = "us-east-1"
    
    # Network configuration
@@ -96,30 +122,51 @@ The infrastructure includes the following components:
    availability_zones = ["us-east-1a", "us-east-1b"]
    
    # EC2 configuration
-   stag_ami_id = "ami-xxxxxxxxxxxxxxxxx"
-   stag_instance_type = "t2.micro"
+   ami_id = "ami-xxxxxxxxxxxxxxxxx"
+   instance_type = "t2.micro"
    
    # RDS configuration
    db_engine = "mysql"
-   stag_db_instance_class = "db.t3.micro"
-   stag_db_storage = 20
-   stag_db_storage_type = "gp2"
-   stag_max_db_storage = 100
-   stag_db_username = "admin"
-   stag_db_password = "your-secure-password"
+   db_instance_class = "db.t3.micro"
+   db_storage = 20
+   db_storage_type = "gp2"
+   max_db_storage = 100
+   db_username = "admin"
+   ```
+
+5. Deploy the infrastructure:
+
+   For staging:
+   ```bash
+   make all-staging
+   ```
+
+   For production:
+   ```bash
+   make all-production
+   ```
+
+   Or deploy individual components:
+   ```bash
+   # Staging
+   make plan-staging     # Review changes
+   make apply-staging    # Apply changes
    
-   # Redis configuration
-   stag_redis_node_type = "cache.t3.micro"
+   # Production
+   make plan-production  # Review changes
+   make apply-production # Apply changes
    ```
 
-4. Plan the deployment:
+6. To destroy infrastructure:
+
+   For staging:
    ```bash
-   terraform plan
+   make destroy-staging
    ```
 
-5. Apply the configuration:
+   For production:
    ```bash
-   terraform apply
+   make destroy-production
    ```
 
 ## Security
