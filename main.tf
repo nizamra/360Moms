@@ -4,7 +4,6 @@ locals {
   max_db_storage       = terraform.workspace == "production" ? var.prod_max_db_storage : var.stage_max_db_storage
   db_username          = terraform.workspace == "production" ? var.prod_db_username : var.stage_db_username
   iam_authentication   = terraform.workspace == "production" ? var.prod_iam_authentication : var.stage_iam_authentication
-  redis_cache_clusters = terraform.workspace == "production" ? var.prod_redis_cache_clusters : var.stage_redis_cache_clusters
 }
 
 module "network" {
@@ -38,7 +37,6 @@ module "redis" {
   redis_node_type         = var.redis_node_type
   redis_security_group_id = module.network.redis_security_group_id
   redis_subnet_group_name = module.network.redis_subnet_group_name
-  redis_cache_clusters    = local.redis_cache_clusters
 }
 
 module "ec2" {

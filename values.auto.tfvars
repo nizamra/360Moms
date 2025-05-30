@@ -38,10 +38,6 @@ autoscaling_health_check_grace_period = 300
 stage_iam_authentication = "true"
 prod_iam_authentication  = "false"
 
-#----------------------REDIS----------------------#
-stage_redis_cache_clusters = "1"
-prod_redis_cache_clusters  = "2"
-
 #----------------------CLOUDWATCH----------------------#
 group_paths = {
   application = "/aws/ec2/application"

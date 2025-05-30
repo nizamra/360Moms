@@ -196,13 +196,3 @@ variable "prod_iam_authentication" {
   description = "IAM authentication for production environment"
   type        = string
 }
-
-variable "stage_redis_cache_clusters" {
-  description = "Number of Redis cache clusters for staging environment"
-  type        = string
-}
-
-variable "prod_redis_cache_clusters" {
-  description = "Number of Redis cache clusters for production environment"
-  type        = string
-}

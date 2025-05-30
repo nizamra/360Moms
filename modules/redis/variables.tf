@@ -17,8 +17,3 @@ variable "redis_subnet_group_name" {
   description = "The name of the Redis subnet group"
   type        = string
 }
-
-variable "redis_cache_clusters" {
-  description = "The number of cache clusters for Redis"
-  type        = number
-}
