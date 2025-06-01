@@ -11,7 +11,7 @@ module "network" {
   name_prefix        = terraform.workspace
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
-  availability_zones = var.availability_zones
+  availability_zones = slice(data.aws_availability_zones.available.names, 0, 2)
   vpc_cidr           = var.vpc_cidr
 }
 
@@ -77,4 +77,9 @@ module "cloudwatch" {
   alarm_common_settings = var.alarm_common_settings
 
   depends_on = [module.network, module.ec2, module.rds, module.redis]
+}
+
+# Declare the data source
+data "aws_availability_zones" "available" {
+  state = "available"
 }

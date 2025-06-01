@@ -1,4 +1,4 @@
-name: Terraform Deployment to AWS
+name: Validate Terraform Code
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ env:
 
 jobs:
   terraform:
-    name: 'Terraform Apply'
+    name: 'Validate Terraform Code'
     runs-on: ubuntu-latest
 
     steps:

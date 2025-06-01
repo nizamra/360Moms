@@ -1,19 +1,18 @@
 #----------------------GENERAL----------------------#
-aws_region   = "me-south-1"
-project_name = "threesixtymom-project"
+aws_region   = "eu-central-1"
+project_name = "360-moms"
 github_repo  = "https://github.com/"
-creator_name = "360MomsIT"
+creator_name = "Nizam"
 
 #----------------------NETWORK----------------------#
-vpc_cidr           = "10.0.0.0/16"
-public_subnets     = ["10.0.1.0/24", "10.0.2.0/24"]
-private_subnets    = ["10.0.101.0/24", "10.0.102.0/24"]
-availability_zones = ["me-south-1a", "me-south-1b"]
+vpc_cidr        = "10.0.0.0/16"
+public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnets = ["10.0.101.0/24", "10.0.102.0/24"]
 
 #----------------------EC2----------------------#
 stage_instance_type = "t3.micro"
 prod_instance_type  = "t3.micro"
-ami_id              = "ami-05386f5b6125efb1f" # Ubuntu 22.04 LTS (me-south-1)
+ami_id              = "ami-0a87a69d69fa289be" # Ubuntu 22.04 LTS (eu-central-1)
 
 #----------------------DATABASE----------------------#
 db_instance_class    = "db.t3.micro"
@@ -86,4 +85,4 @@ alarm_common_settings = {
   period              = 300 # seconds
   statistic           = "Average"
 }
-alarm_alert_email = "alerts@example.com"
+alarm_alert_email = "amin@360moms.net"
