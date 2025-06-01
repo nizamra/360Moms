@@ -16,6 +16,12 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  TF_IN_AUTOMATION: true
+  TF_LOG: INFO
+  TF_LOG_PROVIDER: ERROR
+  TF_INPUT: false
+
 jobs:
   terraform:
     name: "Terraform Apply"
