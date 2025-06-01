@@ -9,7 +9,8 @@ resource "aws_db_instance" "rds" {
   password                            = var.db_password
   db_subnet_group_name                = var.db_subnet_group_name
   vpc_security_group_ids              = [var.db_security_group_id]
-  skip_final_snapshot                 = true
+  skip_final_snapshot                 = false
+  backup_retention_period             = 7
   multi_az                            = true
   iam_database_authentication_enabled = var.iam_authentication
 
