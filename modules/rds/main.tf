@@ -24,8 +24,9 @@ resource "aws_db_instance" "rds" {
   vpc_security_group_ids = [var.db_security_group_id] # Security group controlling access
 
   # High Availability and Backup
-  multi_az            = true # Enable Multi-AZ deployment for high availability
-  skip_final_snapshot = true # Skip final snapshot when destroying the instance
+  multi_az                = true  # Enable Multi-AZ deployment for high availability
+  skip_final_snapshot     = false # Skip final snapshot when destroying the instance
+  backup_retention_period = 7     # Retain backups for 7 days
 
   # Resource Tags
   tags = {

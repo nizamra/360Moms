@@ -1,10 +1,14 @@
-name: Push Terraform Workspaces to AWS
+name: Terraform Deployment to AWS
 
 on:
-  workflow_call:
-  # TODO: Uncomment this when we have a production environment
-  # push:
-  #   branches: [staging, main]
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  id-token: write
+  contents: read
 
 env:
   TF_IN_AUTOMATION: true
@@ -14,7 +18,9 @@ env:
 
 jobs:
   terraform:
+    name: 'Terraform Apply'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,20 +36,17 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: me-south-1
+          aws-region: us-east-1
           role-session-name: GitHubActions-${{ github.run_id }}
           role-duration-seconds: 3600
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
-        run: |
-          if [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-            terraform workspace select staging
-            terraform apply -auto-approve
-          elif [[ $GITHUB_REF == "refs/heads/production" ]]; then
-            terraform workspace select production
-            terraform apply -auto-approve
-          fi
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        id: validate
+        if: (success() || failure())
+        run: terraform validate
