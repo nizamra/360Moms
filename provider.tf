@@ -4,7 +4,7 @@
 # Terraform Block
 # Specifies the required Terraform version and provider requirements
 terraform {
-  required_version = "1.11.2" # Specific Terraform version requirement
+  required_version = ">= 1.11.2" # Specific Terraform version requirement
 
   # Required Provider Configurations
   # Defines the source and version of providers needed for this infrastructure
@@ -18,9 +18,9 @@ terraform {
   # Backend Configuration
   # Configures S3 as the backend for storing Terraform state
   backend "s3" {
-    bucket       = "threesixtymom-terraform-state" # S3 bucket for state storage
+    bucket       = "terraform-state-360mom"        # S3 bucket for state storage
     key          = "tfstate/ThreeSixtyMom.tfstate" # Path to state file within bucket
-    region       = "me-south-1"                    # AWS region for the state bucket
+    region       = "eu-central-1"                  # AWS region for the state bucket
     use_lockfile = true                            # Enable state locking to prevent concurrent modifications
     encrypt      = true                            # Enable server-side encryption of state file
   }

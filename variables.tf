@@ -7,7 +7,6 @@
 variable "aws_region" {
   description = "The AWS region to deploy the resources in"
   type        = string
-  default     = "me-south-1"
 }
 
 variable "project_name" {
@@ -67,11 +66,6 @@ variable "public_subnets" {
 
 variable "private_subnets" {
   description = "List of CIDR blocks for private subnets."
-  type        = list(string)
-}
-
-variable "availability_zones" {
-  description = "List of AZs to use for the subnets."
   type        = list(string)
 }
 

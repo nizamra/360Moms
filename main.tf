@@ -21,10 +21,10 @@ locals {
 module "network" {
   source             = "./modules/network"
   name_prefix        = terraform.workspace
-  public_subnets     = var.public_subnets     # CIDR blocks for public subnets
-  private_subnets    = var.private_subnets    # CIDR blocks for private subnets
-  availability_zones = var.availability_zones # AZs where the infrastructure will be deployed
-  vpc_cidr           = var.vpc_cidr           # Main VPC CIDR block
+  public_subnets     = var.public_subnets                                       # CIDR blocks for public subnets
+  private_subnets    = var.private_subnets                                      # CIDR blocks for private subnets
+  availability_zones = slice(data.aws_availability_zones.available.names, 0, 2) # AZs where the infrastructure will be deployed
+  vpc_cidr           = var.vpc_cidr                                             # Main VPC CIDR block
 }
 
 # RDS Module Block
@@ -97,4 +97,9 @@ module "cloudwatch" {
   alarm_common_settings = var.alarm_common_settings  # Common alarm configurations
 
   depends_on = [module.network, module.ec2, module.rds, module.redis] # Ensures proper deployment order
+}
+
+# Declare the data source
+data "aws_availability_zones" "available" {
+  state = "available"
 }
