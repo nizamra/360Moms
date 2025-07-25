@@ -16,6 +16,12 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  TF_IN_AUTOMATION: true
+  TF_LOG: INFO
+  TF_LOG_PROVIDER: ERROR
+  TF_INPUT: false
+
 jobs:
   terraform:
     name: "Terraform Apply"
@@ -36,7 +42,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: me-south-1
+          aws-region: eu-central-1
           role-session-name: GitHubActions-${{ github.run_id }}
           role-duration-seconds: 3600
 
