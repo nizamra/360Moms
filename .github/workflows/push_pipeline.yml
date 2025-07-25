@@ -2,6 +2,7 @@ name: Push Terraform Workspaces to AWS
 
 on:
   workflow_call:
+  # TODO: Uncomment this when we have a production environment
   # push:
   #   branches: [staging, main]
 
