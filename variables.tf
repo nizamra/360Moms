@@ -24,8 +24,8 @@ variable "creator_name" {
   type        = string
 }
 
-#----------------------STAGING----------------------#
-# Variables specific to the staging environment and instance configurations
+#----------------------dev----------------------#
+# Variables specific to the dev environment and instance configurations
 variable "ami_id" {
   description = "AMI to use for the EC2 instance (must support your OS)."
   type        = string
@@ -45,11 +45,6 @@ variable "db_password" {
   description = "Password for the RDS instance."
   type        = string
   sensitive   = true # Ensures the password is never shown in logs or output
-}
-
-variable "redis_node_type" {
-  description = "ElastiCache Redis node type."
-  type        = string
 }
 
 #----------------------NETWORK----------------------#
@@ -88,95 +83,60 @@ variable "retention_in_days" {
   type        = number
 }
 
-variable "alarm_namespace" {
-  description = "Namespace for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_metric" {
-  description = "Metrics for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_threshold" {
-  description = "Thresholds for CloudWatch alarms"
-  type        = map(any) # Flexible type to support different threshold formats
-}
-
-variable "alarm_dim" {
-  description = "Dimensions for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_attr" {
-  description = "Attributes for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_common_settings" {
-  description = "Common settings for CloudWatch alarms"
-  type        = map(any) # Flexible type to support various settings
-}
-
-variable "alarm_alert_email" {
-  description = "Email address for CloudWatch alerts"
-  type        = string
-}
-
 #----------------------ENVIRONMENT SPECIFIC----------------------#
-# Variables that differ between staging and production environments
+# Variables that differ between dev and prod environments
 
 # EC2 Instance Types
 variable "stage_instance_type" {
-  description = "EC2 instance type for staging environment"
+  description = "EC2 instance type for dev environment"
   type        = string
 }
 
 variable "prod_instance_type" {
-  description = "EC2 instance type for production environment"
+  description = "EC2 instance type for prod environment"
   type        = string
 }
 
 # Database Storage Configuration
 variable "stage_db_storage" {
-  description = "Database storage for staging environment"
+  description = "Database storage for dev environment"
   type        = string
 }
 
 variable "prod_db_storage" {
-  description = "Database storage for production environment"
+  description = "Database storage for prod environment"
   type        = string
 }
 
 variable "stage_max_db_storage" {
-  description = "Maximum database storage for staging environment"
+  description = "Maximum database storage for dev environment"
   type        = string
 }
 
 variable "prod_max_db_storage" {
-  description = "Maximum database storage for production environment"
+  description = "Maximum database storage for prod environment"
   type        = string
 }
 
 # Database Access Configuration
 variable "stage_db_username" {
-  description = "Database username for staging environment"
+  description = "Database username for dev environment"
   type        = string
 }
 
 variable "prod_db_username" {
-  description = "Database username for production environment"
+  description = "Database username for prod environment"
   type        = string
 }
 
 # IAM Authentication Settings
 variable "stage_iam_authentication" {
-  description = "IAM authentication for staging environment"
+  description = "IAM authentication for dev environment"
   type        = string
 }
 
 variable "prod_iam_authentication" {
-  description = "IAM authentication for production environment"
+  description = "IAM authentication for prod environment"
   type        = string
 }
 

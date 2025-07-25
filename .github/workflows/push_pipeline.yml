@@ -2,9 +2,9 @@ name: Push Terraform Workspaces to AWS
 
 on:
   workflow_call:
-  # TODO: Uncomment this when we have a production environment
+  # TODO: Uncomment this when we have a prod environment
   # push:
-  #   branches: [staging, main]
+  #   branches: [dev, main]
 
 env:
   TF_IN_AUTOMATION: true
@@ -38,12 +38,12 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/prod'
         run: |
-          if [[ $GITHUB_REF == "refs/heads/staging" ]]; then
-            terraform workspace select staging
+          if [[ $GITHUB_REF == "refs/heads/dev" ]]; then
+            terraform workspace select dev
             terraform apply -auto-approve
-          elif [[ $GITHUB_REF == "refs/heads/production" ]]; then
-            terraform workspace select production
+          elif [[ $GITHUB_REF == "refs/heads/prod" ]]; then
+            terraform workspace select prod
             terraform apply -auto-approve
           fi

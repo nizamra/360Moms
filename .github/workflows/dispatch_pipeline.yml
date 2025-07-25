@@ -51,12 +51,12 @@ jobs:
 
       - name: Select or Create Workspace
         run: |
-          if [[ "${{ github.ref_name }}" == "staging" ]]; then
-            WS="staging"
-          elif [[ "${{ github.ref_name }}" == "production" ]]; then
-            WS="production"
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
+            WS="dev"
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
+            WS="prod"
           else
-            echo "Error: This workflow must be run on 'staging' or 'production' branch."
+            echo "Error: This workflow must be run on 'dev' or 'prod' branch."
             echo "Current branch: ${{ github.ref_name }}"
             exit 1
           fi
@@ -71,12 +71,12 @@ jobs:
 
       - name: Set DB password for workspace
         run: |
-          if [[ "${{ github.ref_name }}" == "staging" ]]; then
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "TF_VAR_db_password=${{ secrets.STAG_DB_PASSWORD }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "production" ]]; then
+          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
             echo "TF_VAR_db_password=${{ secrets.PROD_DB_PASSWORD }}" >> $GITHUB_ENV
           else
-            echo "Error: Branch is not staging or production. Cannot set DB password for branch ${{ github.ref_name }}."
+            echo "Error: Branch is not dev or prod. Cannot set DB password for branch ${{ github.ref_name }}."
             exit 1
           fi
 
