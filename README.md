@@ -1,6 +1,6 @@
 # 360Moms Infrastructure
 
-This repository contains the infrastructure code for the 360Moms project, built using Terraform. The infrastructure is designed to support both dev and production environments on AWS.
+This repository contains the infrastructure code for the 360Moms project, built using Terraform. The infrastructure is designed to support both dev and prod environments on AWS.
 
 ## Environment Management
 
@@ -12,9 +12,9 @@ The infrastructure is managed using both Git branches and Terraform workspaces:
   - Configuration: `dev.tfvars`
 
 - **Production Environment**:
-  - Git Branch: `production`
-  - Terraform Workspace: `production`
-  - Configuration: `production.tfvars`
+  - Git Branch: `prod`
+  - Terraform Workspace: `prod`
+  - Configuration: `prod.tfvars`
 
 ## Project Structure
 
@@ -24,7 +24,7 @@ The infrastructure is managed using both Git branches and Terraform workspaces:
 ├── variables.tf            # Variable definitions
 ├── provider.tf             # Provider configuration
 ├── dev.tfvars         # dev environment variables
-├── production.tfvars      # Production environment variables
+├── prod.tfvars      # Production environment variables
 ├── Makefile              # Automation for deployment workflows
 └── modules/
     ├── network/            # Network module
@@ -101,9 +101,9 @@ The infrastructure includes the following components:
    make checkout-dev
    ```
 
-   For production:
+   For prod:
    ```bash
-   make checkout-production
+   make checkout-prod
    ```
 
 3. Initialize Terraform:
@@ -111,7 +111,7 @@ The infrastructure includes the following components:
    make init
    ```
 
-4. Configure your environment-specific variables in either `dev.tfvars` or `production.tfvars`:
+4. Configure your environment-specific variables in either `dev.tfvars` or `prod.tfvars`:
    ```hcl
    aws_region = "us-east-1"
 
@@ -141,9 +141,9 @@ The infrastructure includes the following components:
    make all-dev
    ```
 
-   For production:
+   For prod:
    ```bash
-   make all-production
+   make all-prod
    ```
 
    Or deploy individual components:
@@ -153,8 +153,8 @@ The infrastructure includes the following components:
    make apply-dev    # Apply changes
 
    # Production
-   make plan-production  # Review changes
-   make apply-production # Apply changes
+   make plan-prod  # Review changes
+   make apply-prod # Apply changes
    ```
 
 6. To destroy infrastructure:
@@ -164,9 +164,9 @@ The infrastructure includes the following components:
    make destroy-dev
    ```
 
-   For production:
+   For prod:
    ```bash
-   make destroy-production
+   make destroy-prod
    ```
 
 ## Security

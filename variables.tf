@@ -124,7 +124,7 @@ variable "alarm_alert_email" {
 }
 
 #----------------------ENVIRONMENT SPECIFIC----------------------#
-# Variables that differ between dev and production environments
+# Variables that differ between dev and prod environments
 
 # EC2 Instance Types
 variable "stage_instance_type" {
@@ -133,7 +133,7 @@ variable "stage_instance_type" {
 }
 
 variable "prod_instance_type" {
-  description = "EC2 instance type for production environment"
+  description = "EC2 instance type for prod environment"
   type        = string
 }
 
@@ -144,7 +144,7 @@ variable "stage_db_storage" {
 }
 
 variable "prod_db_storage" {
-  description = "Database storage for production environment"
+  description = "Database storage for prod environment"
   type        = string
 }
 
@@ -154,7 +154,7 @@ variable "stage_max_db_storage" {
 }
 
 variable "prod_max_db_storage" {
-  description = "Maximum database storage for production environment"
+  description = "Maximum database storage for prod environment"
   type        = string
 }
 
@@ -165,7 +165,7 @@ variable "stage_db_username" {
 }
 
 variable "prod_db_username" {
-  description = "Database username for production environment"
+  description = "Database username for prod environment"
   type        = string
 }
 
@@ -176,7 +176,7 @@ variable "stage_iam_authentication" {
 }
 
 variable "prod_iam_authentication" {
-  description = "IAM authentication for production environment"
+  description = "IAM authentication for prod environment"
   type        = string
 }
 

@@ -2,18 +2,18 @@
 # This file orchestrates the entire infrastructure deployment by combining various modules
 
 # Local Variables Block
-# Defines environment-specific configurations based on the current workspace (production or dev)
+# Defines environment-specific configurations based on the current workspace (prod or dev)
 locals {
   # Determines instance type based on the workspace
-  instance_type = terraform.workspace == "production" ? var.prod_instance_type : var.stage_instance_type
+  instance_type = terraform.workspace == "prod" ? var.prod_instance_type : var.stage_instance_type
   # Sets database storage size based on the workspace
-  db_storage = terraform.workspace == "production" ? var.prod_db_storage : var.stage_db_storage
+  db_storage = terraform.workspace == "prod" ? var.prod_db_storage : var.stage_db_storage
   # Configures maximum database storage based on the workspace
-  max_db_storage = terraform.workspace == "production" ? var.prod_max_db_storage : var.stage_max_db_storage
+  max_db_storage = terraform.workspace == "prod" ? var.prod_max_db_storage : var.stage_max_db_storage
   # Sets database username based on the workspace
-  db_username = terraform.workspace == "production" ? var.prod_db_username : var.stage_db_username
+  db_username = terraform.workspace == "prod" ? var.prod_db_username : var.stage_db_username
   # Configures IAM authentication settings based on the workspace
-  iam_authentication = terraform.workspace == "production" ? var.prod_iam_authentication : var.stage_iam_authentication
+  iam_authentication = terraform.workspace == "prod" ? var.prod_iam_authentication : var.stage_iam_authentication
 }
 
 # Network Module Block
