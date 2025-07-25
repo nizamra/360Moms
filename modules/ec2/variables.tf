@@ -37,34 +37,3 @@ variable "security_group_id" {
   description = "Security group ID for EC2 instance"
   type        = string # Controls inbound/outbound traffic rules
 }
-
-#----------------------Service Endpoints----------------------#
-# Database connection information
-variable "db_endpoint" {
-  description = "RDS instance endpoint"
-  type        = string # Hostname:port for database connection
-}
-
-# Cache connection information
-variable "redis_endpoint" {
-  description = "Redis cluster endpoint"
-  type        = string # Hostname:port for Redis connection
-}
-
-#----------------------Database Access----------------------#
-# Database authentication credentials
-variable "db_username" {
-  description = "Database username"
-  type        = string # Username for database access
-}
-
-variable "db_password" {
-  description = "Database password"
-  type        = string
-  sensitive   = true # Marked sensitive to prevent exposure in logs
-}
-
-variable "db_resource_id" {
-  description = "Database resource ID"
-  type        = string # Used for IAM authentication to RDS
-}

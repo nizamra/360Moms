@@ -47,11 +47,6 @@ variable "db_password" {
   sensitive   = true # Ensures the password is never shown in logs or output
 }
 
-variable "redis_node_type" {
-  description = "ElastiCache Redis node type."
-  type        = string
-}
-
 #----------------------NETWORK----------------------#
 # Network configuration variables for VPC and subnet setup
 variable "vpc_cidr" {
@@ -86,41 +81,6 @@ variable "group_paths" {
 variable "retention_in_days" {
   description = "Number of days to retain logs"
   type        = number
-}
-
-variable "alarm_namespace" {
-  description = "Namespace for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_metric" {
-  description = "Metrics for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_threshold" {
-  description = "Thresholds for CloudWatch alarms"
-  type        = map(any) # Flexible type to support different threshold formats
-}
-
-variable "alarm_dim" {
-  description = "Dimensions for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_attr" {
-  description = "Attributes for CloudWatch alarms"
-  type        = map(string)
-}
-
-variable "alarm_common_settings" {
-  description = "Common settings for CloudWatch alarms"
-  type        = map(any) # Flexible type to support various settings
-}
-
-variable "alarm_alert_email" {
-  description = "Email address for CloudWatch alerts"
-  type        = string
 }
 
 #----------------------ENVIRONMENT SPECIFIC----------------------#
