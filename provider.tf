@@ -18,7 +18,7 @@ terraform {
   # Backend Configuration
   # Configures S3 as the backend for storing Terraform state
   backend "s3" {
-    bucket       = "terraform-state-360mom"        # S3 bucket for state storage
+    bucket       = "terraform-state-360moms"       # S3 bucket for state storage
     key          = "tfstate/ThreeSixtyMom.tfstate" # Path to state file within bucket
     region       = "eu-central-1"                  # AWS region for the state bucket
     use_lockfile = true                            # Enable state locking to prevent concurrent modifications

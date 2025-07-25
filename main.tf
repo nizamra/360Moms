@@ -2,7 +2,7 @@
 # This file orchestrates the entire infrastructure deployment by combining various modules
 
 # Local Variables Block
-# Defines environment-specific configurations based on the current workspace (production or staging)
+# Defines environment-specific configurations based on the current workspace (production or dev)
 locals {
   # Determines instance type based on the workspace
   instance_type = terraform.workspace == "production" ? var.prod_instance_type : var.stage_instance_type

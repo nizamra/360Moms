@@ -1,15 +1,15 @@
 # 360Moms Infrastructure
 
-This repository contains the infrastructure code for the 360Moms project, built using Terraform. The infrastructure is designed to support both staging and production environments on AWS.
+This repository contains the infrastructure code for the 360Moms project, built using Terraform. The infrastructure is designed to support both dev and production environments on AWS.
 
 ## Environment Management
 
 The infrastructure is managed using both Git branches and Terraform workspaces:
 
-- **Staging Environment**:
-  - Git Branch: `staging`
-  - Terraform Workspace: `staging`
-  - Configuration: `staging.tfvars`
+- **dev Environment**:
+  - Git Branch: `dev`
+  - Terraform Workspace: `dev`
+  - Configuration: `dev.tfvars`
 
 - **Production Environment**:
   - Git Branch: `production`
@@ -23,14 +23,14 @@ The infrastructure is managed using both Git branches and Terraform workspaces:
 ├── main.tf                 # Main Terraform configuration
 ├── variables.tf            # Variable definitions
 ├── provider.tf             # Provider configuration
-├── staging.tfvars         # Staging environment variables
+├── dev.tfvars         # dev environment variables
 ├── production.tfvars      # Production environment variables
 ├── Makefile              # Automation for deployment workflows
 └── modules/
     ├── network/            # Network module
     │   ├── variables.tf    # Network variables
     │   ├── vpc.tf          # VPC configuration
-    │   └── outputs.tf      # Network outputs 
+    │   └── outputs.tf      # Network outputs
     ├── ec2/               # EC2 module
     │   ├── variables.tf    # EC2 variables
     │   ├── main.tf         # EC2 instance configuration
@@ -53,7 +53,7 @@ The infrastructure is managed using both Git branches and Terraform workspaces:
 
 The infrastructure includes the following components:
 
-- **Network Module**: 
+- **Network Module**:
   - Custom VPC with public and private subnets
   - Internet Gateway, NAT Gateway
   - Security Groups for EC2, RDS, and Redis
@@ -75,7 +75,7 @@ The infrastructure includes the following components:
   - Private subnet deployment
   - Security group configuration
 
-- **CloudWatch Module**: 
+- **CloudWatch Module**:
   - Comprehensive monitoring and alerting
   - Metric collection for EC2, RDS, and Redis
   - Email notifications for alerts
@@ -95,12 +95,12 @@ The infrastructure includes the following components:
    ```
 
 2. Choose your target environment:
-   
-   For staging:
+
+   For dev:
    ```bash
-   make checkout-staging
+   make checkout-dev
    ```
-   
+
    For production:
    ```bash
    make checkout-production
@@ -111,20 +111,20 @@ The infrastructure includes the following components:
    make init
    ```
 
-4. Configure your environment-specific variables in either `staging.tfvars` or `production.tfvars`:
+4. Configure your environment-specific variables in either `dev.tfvars` or `production.tfvars`:
    ```hcl
    aws_region = "us-east-1"
-   
+
    # Network configuration
    vpc_cidr = "10.0.0.0/16"
    public_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
    private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
    availability_zones = ["us-east-1a", "us-east-1b"]
-   
+
    # EC2 configuration
    ami_id = "ami-xxxxxxxxxxxxxxxxx"
    instance_type = "t2.micro"
-   
+
    # RDS configuration
    db_engine = "mysql"
    db_instance_class = "db.t3.micro"
@@ -136,9 +136,9 @@ The infrastructure includes the following components:
 
 5. Deploy the infrastructure:
 
-   For staging:
+   For dev:
    ```bash
-   make all-staging
+   make all-dev
    ```
 
    For production:
@@ -148,10 +148,10 @@ The infrastructure includes the following components:
 
    Or deploy individual components:
    ```bash
-   # Staging
-   make plan-staging     # Review changes
-   make apply-staging    # Apply changes
-   
+   # dev
+   make plan-dev     # Review changes
+   make apply-dev    # Apply changes
+
    # Production
    make plan-production  # Review changes
    make apply-production # Apply changes
@@ -159,9 +159,9 @@ The infrastructure includes the following components:
 
 6. To destroy infrastructure:
 
-   For staging:
+   For dev:
    ```bash
-   make destroy-staging
+   make destroy-dev
    ```
 
    For production:

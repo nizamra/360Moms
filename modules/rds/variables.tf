@@ -5,7 +5,7 @@
 # Prefix used for naming RDS resources
 variable "name_prefix" {
   description = "Prefix for resources"
-  type        = string # Example: "prod" or "staging"
+  type        = string # Example: "prod" or "dev"
 }
 
 #----------------------Database Engine Configuration----------------------#

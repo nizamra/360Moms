@@ -5,7 +5,7 @@
 # Prefix used for naming Redis resources
 variable "name_prefix" {
   description = "Prefix for resources"
-  type        = string # Example: "prod" or "staging"
+  type        = string # Example: "prod" or "dev"
 }
 
 #----------------------Cluster Configuration----------------------#
